@@ -8,8 +8,3 @@ app = configure_routes(Flask(__name__))
 @app.route('/swagger')
 def swagger_spec():
     return jsonify(swagger(app))
-
-
-@app.route('/health')
-def health_check():
-    return jsonify(is_healthy=True)
