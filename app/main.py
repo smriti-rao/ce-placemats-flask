@@ -13,7 +13,7 @@ def kwargs_from_environ(environ_to_kwarg):
     """
     out = {}
     for environ_key, kwarg_key in environ_to_kwarg.items():
-        if os.environ.get(environ_key):
+        if os.environ.get(environ_key) is not None:
             out[kwarg_key] = os.environ[environ_key]
     return out
 
