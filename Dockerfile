@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.7
 
 # Copy python requirements file
 COPY requirements.txt /tmp/requirements.txt
@@ -13,6 +13,8 @@ RUN apk add --no-cache \
     nginx \
     uwsgi \
     uwsgi-python3 \
+    postgresql-dev \
+    musl-dev \
     supervisor && \
     python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip && \
