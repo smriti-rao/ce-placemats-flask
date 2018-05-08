@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask_swagger import swagger
 from app.placemats.url_config import configure_routes
-import app.placemats.ncbi_client as client
+import app.placemats.ncbi_client as ncbi
 import os
 
 
@@ -18,7 +18,7 @@ def kwargs_from_environ(environ_to_kwarg):
     return out
 
 
-client.configure_client(kwargs_from_environ({
+ncbi.configure_client(kwargs_from_environ({
     'NCBI_EMAIL': 'email',
     'NCBI_API_KEY': 'api_key',
 }))
