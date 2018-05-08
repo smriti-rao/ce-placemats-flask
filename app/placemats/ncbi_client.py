@@ -16,7 +16,7 @@ def configure_client(email='A.N.Other@example.com', api_key=None):
 
 def call(procedure, *args, **kwargs):
     """
-    Wraps all our calls to Entrez api's. Acts as our 'http interceptor'.
+    Wraps all our calls to Entrez API's. Acts as our 'http interceptor'.
     :param procedure: Entrez function to invoke
     :param args:
     :param kwargs:
