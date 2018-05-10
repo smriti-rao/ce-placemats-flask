@@ -1,8 +1,17 @@
+import os
+import logging
+
+if os.environ.get('FLASK_ENV') == 'development':
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
+
+logger = logging.getLogger(__name__)
+
 from flask import Flask, jsonify
 from flask_swagger import swagger
 from app.placemats.url_config import configure_routes
 import app.placemats.ncbi_client as ncbi
-import os
 
 
 def kwargs_from_environ(environ_to_kwarg):
@@ -29,3 +38,6 @@ app = configure_routes(Flask(__name__))
 @app.route('/swagger')
 def swagger_spec():
     return jsonify(swagger(app))
+
+
+logger.info('Ready')
