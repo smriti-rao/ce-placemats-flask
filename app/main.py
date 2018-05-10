@@ -18,7 +18,7 @@ def kwargs_from_environ(environ_to_kwarg):
     return out
 
 
-ncbi.configure_client(kwargs_from_environ({
+ncbi.configure_client(**kwargs_from_environ({
     'NCBI_EMAIL': 'email',
     'NCBI_API_KEY': 'api_key',
 }))
