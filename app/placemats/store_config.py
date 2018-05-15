@@ -7,6 +7,9 @@ logger = logging.getLogger(__name__)
 
 store_class = MongoStore
 
+uses_mongo_object_id = set([
+])
+
 
 def get_store(resource_name):
     if store_class is MongoStore:
@@ -14,4 +17,5 @@ def get_store(resource_name):
             url = os.environ['MONGO_URL']
         else:
             url = 'mongodb://mongodb:27017/'
-        return MongoStore(pymongo.MongoClient(url)['placemats'][resource_name])
+        return MongoStore(pymongo.MongoClient(url)['placemats'][resource_name],
+                          use_object_id=resource_name in uses_mongo_object_id)
