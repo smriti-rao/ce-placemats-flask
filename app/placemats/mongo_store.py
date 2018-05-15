@@ -3,6 +3,7 @@ import pymongo.collection
 import pymongo.errors
 import logging
 import uuid
+import urllib.parse
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ class MongoStore(BaseStore):
 
     def add(self, to_add, pk=None):
         to_add['_id'] = str(uuid.uuid4()) if pk is None else pk
-        to_add['href'] = '{}{}'.format(self.href_prefix, to_add['_id'])
+        to_add['href'] = '{}{}'.format(self.href_prefix, urllib.parse.quote(to_add['_id'], safe=''))
         try:
             new_pk = self.client.insert_one(to_add).inserted_id
             return True, self.client.find_one({'_id': new_pk})
