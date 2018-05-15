@@ -13,5 +13,5 @@ def get_store(resource_name):
         if 'MONGO_URL' in os.environ:
             url = os.environ['MONGO_URL']
         else:
-            url = 'mongodb://localhost:27017/'
+            url = 'mongodb://mongodb:27017/'
         return MongoStore(pymongo.MongoClient(url)['placemats'][resource_name])

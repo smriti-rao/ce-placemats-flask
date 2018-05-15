@@ -1,0 +1,12 @@
+version: '3'
+services:
+
+  placemats:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:3.6
