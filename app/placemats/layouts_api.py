@@ -13,6 +13,7 @@ class LayoutsApi(MethodView):
         super().__init__()
 
     def get(self, pk=None):
+        pk = LayoutsApi._normalize_pk(pk)
         if pk is None:
             return self.layouts_store.get()
         layout = self.layouts_store.get(pk=pk)
@@ -23,3 +24,7 @@ class LayoutsApi(MethodView):
             return layout
         # TODO post-creation logic
         return layout
+
+    @staticmethod
+    def _normalize_pk(pk: str):
+        return pk.strip().lower() if isinstance(pk, str) else None
