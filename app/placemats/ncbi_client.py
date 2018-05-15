@@ -1,4 +1,7 @@
 import Bio.Entrez
+import logging
+
+logger = logging.getLogger(__name__)
 
 API_KEY = None
 
@@ -17,11 +20,13 @@ def configure_client(email='A.N.Other@example.com', api_key=None):
 def call(procedure, *args, **kwargs):
     """
     Wraps all our calls to Entrez API's. Acts as our 'http interceptor'.
+    :type procedure: function
     :param procedure: Entrez function to invoke
     :param args:
     :param kwargs:
     :return:
     """
+    logger.debug('Calling {} with args: {}, kwargs: {}'.format(procedure.__name__, args, kwargs))
     if API_KEY:
         kwargs['api_key'] = API_KEY
     handle = procedure(*args, **kwargs)

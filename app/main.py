@@ -20,11 +20,8 @@ def kwargs_from_environ(environ_to_kwarg):
     configure the biopython ncbi client.
     :param environ_to_kwarg:
     """
-    out = {}
-    for environ_key, kwarg_key in environ_to_kwarg.items():
-        if os.environ.get(environ_key) is not None:
-            out[kwarg_key] = os.environ[environ_key]
-    return out
+    env_keys = filter(lambda k: k in os.environ, environ_to_kwarg.keys())
+    return {environ_to_kwarg[k]: os.environ[k] for k in env_keys}
 
 
 ncbi.configure_client(**kwargs_from_environ({
