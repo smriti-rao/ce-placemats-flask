@@ -9,17 +9,15 @@ logger = logging.getLogger(__name__)
 class LayoutsApi(MethodView):
     layouts_store: BaseStore = get_store('layouts')
 
-    def __init__(self) -> None:
-        super().__init__()
-
-    def get(self, pk=None):
+    @staticmethod
+    def get(pk=None):
         pk = LayoutsApi._normalize_pk(pk)
         if pk is None:
-            return self.layouts_store.get()
-        layout = self.layouts_store.get(pk=pk)
+            return LayoutsApi.layouts_store.get()
+        layout = LayoutsApi.layouts_store.get(pk=pk)
         if layout is not None:
             return layout
-        is_new, layout = self.layouts_store.add({}, pk=pk)
+        is_new, layout = LayoutsApi.layouts_store.add({}, pk=pk)
         if not is_new:
             return layout
         # TODO post-creation logic
