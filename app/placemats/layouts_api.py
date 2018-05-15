@@ -1,5 +1,4 @@
 from flask.views import MethodView
-from app.placemats.store import BaseStore
 from app.placemats.store_config import get_store
 from app.placemats.base_api import BaseApi
 import logging
@@ -10,7 +9,7 @@ logger = logging.getLogger(__name__)
 class LayoutsApi(MethodView, BaseApi):
     def get_one(self, pk):
         pk = LayoutsApi._normalize_pk(pk)
-        layouts_store: BaseStore = get_store('layouts')
+        layouts_store = get_store('layouts')
         layout = layouts_store.get(pk=pk)
         if layout is not None:
             return layout

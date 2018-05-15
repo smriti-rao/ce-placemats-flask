@@ -1,5 +1,6 @@
 import logging
 from app.placemats.mongo_store import MongoStore
+from app.placemats.store import BaseStore
 import os
 import pymongo
 
@@ -11,7 +12,7 @@ uses_mongo_object_id = set([
 ])
 
 
-def get_store(resource_name):
+def get_store(resource_name) -> BaseStore:
     if store_class is MongoStore:
         if 'MONGO_URL' in os.environ:
             url = os.environ['MONGO_URL']
