@@ -8,9 +8,6 @@ logger = logging.getLogger(__name__)
 
 store_class = MongoStore
 
-uses_mongo_object_id = set([
-])
-
 
 def _get_store(resource_name) -> BaseStore:
     if store_class is MongoStore:
@@ -19,8 +16,12 @@ def _get_store(resource_name) -> BaseStore:
         else:
             url = 'mongodb://mongodb:27017/'
         return MongoStore(pymongo.MongoClient(url)['placemats'][resource_name],
-                          use_object_id=resource_name in uses_mongo_object_id)
+                          '/{}/'.format(resource_name))
 
 
 def layouts_store():
     return _get_store('layouts')
+
+
+def widgets_store():
+    return _get_store('widgets')

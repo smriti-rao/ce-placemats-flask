@@ -1,5 +1,6 @@
 from app.placemats.api import PlacematsApi
 from app.placemats.layouts_api import LayoutsApi
+from app.placemats.widgets_api import WidgetsApi
 from app.placemats.decorators import jsonify_view
 
 
@@ -18,5 +19,6 @@ def register_api(app, view, endpoint, url, pk_type='string'):
 
 def configure_routes(app):
     register_api(app, LayoutsApi, endpoint='layouts_resource', url='/layouts/')
+    register_api(app, WidgetsApi, endpoint='widgets_resource', url='/widgets/')
     # register_api(app, PlacematsApi, endpoint='placemats_api', url='/placemats/', pk='search_terms')
     return app
