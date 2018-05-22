@@ -9,6 +9,7 @@ else:
 logger = logging.getLogger(__name__)
 
 from flask import Flask, jsonify
+from flask_cors import CORS
 from flask_swagger import swagger
 from app.placemats.url_config import configure_routes
 import app.placemats.ncbi_client as ncbi
@@ -24,12 +25,17 @@ def kwargs_from_environ(environ_to_kwarg):
     return {environ_to_kwarg[k]: os.environ[k] for k in env_keys}
 
 
+def apply_cors(flask_app):
+    CORS(flask_app)
+    return flask_app
+
+
 ncbi.configure_client(**kwargs_from_environ({
     'NCBI_EMAIL': 'email',
     'NCBI_API_KEY': 'api_key',
 }))
 
-app = configure_routes(Flask(__name__))
+app = configure_routes(apply_cors(Flask(__name__)))
 
 
 @app.route('/swagger')
