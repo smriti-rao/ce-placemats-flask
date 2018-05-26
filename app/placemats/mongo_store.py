@@ -14,13 +14,13 @@ class MongoStore(BaseStore):
         self.client = collection
         self.href_prefix = href_prefix
 
-    def get(self, pk=None, pks: list = None, projection=None):
+    def get(self, pk=None, pks: list = None, projection=None, skip=0, limit=0):
         if pk is not None:
             return self.client.find_one({'_id': pk}, projection=projection)
         find_query = {}
         if pks is not None:
             find_query['_id'] = {'$in': pks}
-        out = [d for d in self.client.find(find_query, projection=projection)]
+        out = [d for d in self.client.find(find_query, projection=projection, skip=skip, limit=limit)]
         if pks is not None:
             try:
                 out = sorted(out, key=lambda d: pks.index(d['_id']))

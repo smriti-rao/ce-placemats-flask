@@ -11,6 +11,9 @@ projected_widget_fields = ['type', 'status', 'href', 'name', 'description']
 
 
 class LayoutsApi(MethodView, BaseApi):
+    LIMIT_MAX = 50
+    LIMIT_DEFAULT = 25
+
     def get_one(self, pk):
         pk = LayoutsApi._normalize_pk(pk)
         l_store = layouts_store()
@@ -26,9 +29,9 @@ class LayoutsApi(MethodView, BaseApi):
         }, pk=pk)
         return LayoutsApi._resolve_widgets(layout, w_store)
 
-    def get_list(self):
+    def get_list(self, skip=None, limit=None):
         w_store = widgets_store()
-        return [LayoutsApi._resolve_widgets(x, w_store) for x in layouts_store().get()]
+        return [LayoutsApi._resolve_widgets(x, w_store) for x in layouts_store().get(skip=skip, limit=limit)]
 
     @staticmethod
     def _resolve_widgets(layout, w_store: BaseStore):
