@@ -1,13 +1,5 @@
 from app.placemats.task_queue import TaskQueue
-from collections import namedtuple
 import pymongo.collection
-
-Task = namedtuple('Task', ['idempotency_key', 'task_info', 'state'])
-
-TASK_INIT = 'init'
-TASK_PENDING = 'pending'
-TASK_FAILED = 'failed'
-TASK_SUCCEEDED = 'succeeded'
 
 
 class MongoTaskQueue(TaskQueue):
