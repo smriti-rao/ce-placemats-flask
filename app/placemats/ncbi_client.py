@@ -1,5 +1,5 @@
 import Bio.Entrez
-from Bio import Medline
+import Bio.Medline
 import logging
 from app.placemats.util import *
 from collections import defaultdict, namedtuple
@@ -11,7 +11,7 @@ API_KEY = None
 MAX_PER_PAGE = 2000
 
 
-def configure_client(email='robot.user.12234455311456@gmail.com', api_key=None):
+def configure_client(email='adrien.guerard@gmail.com', api_key=None):
     """
     Must be called once before calling any of the other API's
     :param email:
@@ -35,8 +35,8 @@ def call(procedure, *args, **kwargs):
     if API_KEY:
         kwargs['api_key'] = API_KEY
     handle = procedure(*args, **kwargs)
-    if 'rettype' in kwargs and kwargs['rettype'] == 'medline':
-        output = Medline.parse(handle)
+    if kwargs.get('rettype') == 'medline':
+        output = Bio.Medline.parse(handle)
         output = list(output)
     else:
         output = Bio.Entrez.read(handle)
