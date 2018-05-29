@@ -74,7 +74,9 @@ def esearch(*args, **kwargs):
 
 def pubmed_search(term, skip=0, limit=MAX_PER_PAGE, sort='relevance'):
     retmax = min(limit, MAX_PER_PAGE)
-    return esearch(db='pubmed', sort=sort, term=term, retstart=skip, retmax=retmax)
+    out = esearch(db='pubmed', sort=sort, term=term, retstart=skip, retmax=retmax)
+    logger.info('Pubmed search query: %s ; translation-set: %s', term, out['TranslationSet'])
+    return out
 
 
 def get_medline_infos(ids):
@@ -99,7 +101,7 @@ AuthorInfo = namedtuple('AuthorInfo', ['pmid_to_authors', 'author_to_pmids', 'pm
 Article = namedtuple('Article', ['title', 'abstract'])
 
 
-def author_info(term, limit=10_000):
+def author_info(term, limit=20_000):
     pmids = get_pmids_for_term(term, limit)
     pmid_to_authors = defaultdict(set)
     author_to_pmids = defaultdict(set)
