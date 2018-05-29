@@ -12,7 +12,6 @@ projected_widget_fields = ['type', 'status', 'href', 'name', 'description']
 
 class LayoutsApi(MethodView, BaseApi):
     LIMIT_MAX = 50
-    LIMIT_DEFAULT = 25
 
     def get_one(self, pk):
         pk = LayoutsApi._normalize_pk(pk)

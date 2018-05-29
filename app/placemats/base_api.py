@@ -3,11 +3,10 @@ from flask import request
 
 class BaseApi:
     LIMIT_MAX = 20
-    LIMIT_DEFAULT = 10
 
     def get(self, pk=None):
         if pk is None:
-            skip, limit = _get_query_or_default('skip', 0), _get_query_or_default('limit', self.LIMIT_DEFAULT)
+            skip, limit = _get_query_or_default('skip', 0), _get_query_or_default('limit', self.LIMIT_MAX)
             skip = int(skip)
             limit = min(int(limit), self.LIMIT_MAX)
             return self.get_list(skip=skip, limit=limit)

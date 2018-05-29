@@ -37,7 +37,7 @@ def call(procedure, *args, **kwargs):
     handle = procedure(*args, **kwargs)
     if 'rettype' in kwargs and kwargs['rettype'] == 'medline':
         output = Medline.parse(handle)
-        output = [x for x in output]
+        output = list(output)
     else:
         output = Bio.Entrez.read(handle)
     handle.close()
@@ -72,9 +72,9 @@ def esearch(*args, **kwargs):
     return call(Bio.Entrez.esearch, *args, **kwargs)
 
 
-def pubmed_search(term, limit=PER_PAGE, skip=0):
+def pubmed_search(term, skip=0, limit=PER_PAGE, sort='relevance'):
     retmax = min(limit, PER_PAGE)
-    return esearch(db='pubmed', sort='relevance', term=term, retstart=skip, retmax=retmax)
+    return esearch(db='pubmed', sort=sort, term=term, retstart=skip, retmax=retmax)
 
 
 def get_medline_infos(ids):
@@ -85,19 +85,18 @@ def get_medline_infos(ids):
 
 
 def get_pmids_for_term(term, limit):
-    articles_count = 0
     pmids = []
     current = pubmed_search(term)
     current_id_list = current['IdList']
-    while articles_count < limit and current_id_list:
+    while len(pmids) < limit and current_id_list:
         pmids.extend(current_id_list)
-        articles_count += len(current_id_list)
-        current = pubmed_search(term, skip=articles_count)
+        current = pubmed_search(term, skip=len(pmids))
         current_id_list = current['IdList']
     return pmids[:limit]
 
 
 AuthorInfo = namedtuple('AuthorInfo', ['pmid_to_authors', 'author_to_pmids', 'pmid_to_articles'])
+Article = namedtuple('Article', ['title', 'abstract'])
 
 
 def author_info(term, limit=10_000):
@@ -114,8 +113,5 @@ def author_info(term, limit=10_000):
         for name in m_info['FAU']:
             author_to_pmids[name].add(pmid)
             pmid_to_authors[pmid].add(name)
-            pmid_to_articles[pmid] = {
-                'title': m_info.get('TI'),
-                'abstract': m_info.get('AB'),
-            }
+            pmid_to_articles[pmid] = Article(m_info.get('TI'), m_info.get('AB'))
     return AuthorInfo(pmid_to_authors, author_to_pmids, pmid_to_articles)

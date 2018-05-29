@@ -6,7 +6,6 @@ from flask import abort
 
 class WidgetsApi(MethodView, BaseApi):
     LIMIT_MAX = 10
-    LIMIT_DEFAULT = 5
 
     def get_one(self, pk):
         store = widgets_store()
