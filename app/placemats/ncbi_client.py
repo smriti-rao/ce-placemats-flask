@@ -11,7 +11,7 @@ API_KEY = None
 MAX_PER_PAGE = 2000
 
 
-def configure_client(email='adrien.guerard@gmail.com', api_key=None):
+def configure_client(email='dev.robot@conceptualeyes.com', api_key=None):
     """
     Must be called once before calling any of the other API's
     :param email:
@@ -36,12 +36,12 @@ def call(procedure, *args, **kwargs):
         kwargs['api_key'] = API_KEY
     handle = procedure(*args, **kwargs)
     if kwargs.get('rettype') == 'medline':
-        output = Bio.Medline.parse(handle)
-        output = list(output)
+        out = Bio.Medline.parse(handle)
+        out = list(out)
     else:
-        output = Bio.Entrez.read(handle)
+        out = Bio.Entrez.read(handle)
     handle.close()
-    return output
+    return out
 
 
 def efetch(*args, **kwargs):
