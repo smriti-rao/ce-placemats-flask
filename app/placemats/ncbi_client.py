@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 API_KEY = None
 
-MAX_PER_PAGE = 100
+MAX_PER_PAGE = 2000
 
 
 def configure_client(email='robot.user.12234455311456@gmail.com', api_key=None):
