@@ -11,7 +11,7 @@ API_KEY = None
 MAX_PER_PAGE = 2000
 
 
-def configure_client(email='dev.robot@conceptualeyes.com', api_key=None):
+def configure_client(email='dev.robot@gmail.com', api_key=None):
     """
     Must be called once before calling any of the other API's
     :param email:
