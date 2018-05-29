@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 API_KEY = None
 
-PER_PAGE = 100
+MAX_PER_PAGE = 100
 
 
 def configure_client(email='robot.user.12234455311456@gmail.com', api_key=None):
@@ -72,14 +72,14 @@ def esearch(*args, **kwargs):
     return call(Bio.Entrez.esearch, *args, **kwargs)
 
 
-def pubmed_search(term, skip=0, limit=PER_PAGE, sort='relevance'):
-    retmax = min(limit, PER_PAGE)
+def pubmed_search(term, skip=0, limit=MAX_PER_PAGE, sort='relevance'):
+    retmax = min(limit, MAX_PER_PAGE)
     return esearch(db='pubmed', sort=sort, term=term, retstart=skip, retmax=retmax)
 
 
 def get_medline_infos(ids):
     infos = []
-    for ids_chunk in chunks(ids, PER_PAGE):
+    for ids_chunk in chunks(ids, MAX_PER_PAGE):
         infos.extend(efetch(db='pubmed', id=ids_chunk, rettype='medline', retmode='text'))
     return infos
 
