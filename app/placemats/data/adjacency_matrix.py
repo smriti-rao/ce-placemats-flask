@@ -6,6 +6,15 @@ logger = logging.getLogger(__name__)
 
 
 def adjacency_matrix(edge_to_nodes: dict):
+    """
+    Builds the adjacency_matrix for the provided dict.
+
+    :param edge_to_nodes: The value for each key is the set of nodes for which an edge should be added
+        for each combination of nodes to represent the relationship denoted by the key. To use a specific example,
+        the author adjacency_matrix is built by passing in a dict where the keys are PMID's and values
+        are the set of authors for a given PMID.
+    :return:
+    """
     graph = nx.Graph()
     for edge, nodes in edge_to_nodes.items():
         for n1, n2 in combinations(nodes, 2):

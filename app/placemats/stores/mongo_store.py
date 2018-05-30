@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class MongoStore(BaseStore):
-    def __init__(self, collection: pymongo.collection.Collection, href_prefix) -> None:
+    def __init__(self, collection: pymongo.collection.Collection, href_prefix=None) -> None:
         super().__init__()
         self.client = collection
         self.href_prefix = href_prefix
@@ -30,7 +30,8 @@ class MongoStore(BaseStore):
 
     def add(self, to_add, pk=None):
         to_add['_id'] = str(uuid.uuid4()) if pk is None else pk
-        to_add['href'] = '{}{}'.format(self.href_prefix, urllib.parse.quote(to_add['_id'], safe=''))
+        if self.href_prefix is not None:
+            to_add['href'] = '{}{}'.format(self.href_prefix, urllib.parse.quote(to_add['_id'], safe=''))
         try:
             new_pk = self.client.insert_one(to_add).inserted_id
             return True, self.client.find_one({'_id': new_pk})

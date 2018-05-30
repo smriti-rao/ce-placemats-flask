@@ -7,7 +7,7 @@ import datetime
 class MongoCache(BaseCache):
     def __init__(self, collection: pymongo.collection.Collection, ttl=300) -> None:
         super().__init__()
-        self.store = MongoStore(collection, '')
+        self.store = MongoStore(collection)
         collection.create_index('created', expireAfterSeconds=ttl)
 
     def get(self, key=None):
