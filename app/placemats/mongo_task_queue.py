@@ -1,4 +1,4 @@
-from app.placemats.task_queue import TaskQueue
+from app.placemats.task_queue import TaskQueue, Task
 import pymongo.collection
 
 
@@ -7,8 +7,8 @@ class MongoTaskQueue(TaskQueue):
         super().__init__()
         self.coll = collection
 
-    def enqueue(self, idempotency_key, task_info):
+    def enqueue(self, task: Task):
         pass
 
-    def dequeue(self):
+    def dequeue(self) -> Task:
         pass

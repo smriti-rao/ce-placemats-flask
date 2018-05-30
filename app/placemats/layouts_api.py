@@ -20,7 +20,10 @@ class LayoutsApi(MethodView, BaseApi):
         layout = l_store.get(pk=pk)
         if layout is not None:
             return LayoutsApi._resolve_widgets(layout, w_store)
-        widgets = generate_mock_widgets()
+        if pk == 'alopecia areata treatment':
+            widgets = generate_mock_widgets(term=pk)
+        else:
+            widgets = generate_mock_widgets()
         w_pks = [w_store.add(w)[1]['_id'] for w in widgets]
         is_new, layout = l_store.add({  # TODO: handle when is_new is False
             'search_terms': pk,

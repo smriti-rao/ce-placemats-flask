@@ -1,14 +1,16 @@
 from app.placemats.mock_data import *
+from app.placemats.ncbi_client import author_info
+from app.placemats.adjacency_matrix import adjacency_matrix
 
 
-def generate_mock_widgets():
+def generate_mock_widgets(term=None):
     return [
         {
             'type': 'adj_matrix',
             'status': 'complete',
             'name': 'Question 1 (Adjacency List)',
             'description': '',
-            'data': ADJ_MATRIX_DATA
+            'data': ADJ_MATRIX_DATA if term is None else adjacency_matrix(author_info(term).pmid_to_authors)
         }, {
             'type': 'budget',
             'status': 'complete',
