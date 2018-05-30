@@ -108,8 +108,8 @@ def author_info(term, limit=20_000):
     pmid_to_articles = {}
     medline_infos = get_medline_infos(pmids)
     for m_info in medline_infos:
-        if not ('FAU' in m_info and 'PMID' in m_info):
-            logger.warning('[author_info] PMID or author name not found for term: %s ; %s', term, m_info)
+        if 'FAU' not in m_info:
+            logger.warning('[author_info] Author name not found for term: %s ; PMID: %s', term, m_info['PMID'])
             continue
         pmid = m_info['PMID']
         for name in m_info['FAU']:
