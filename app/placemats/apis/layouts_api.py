@@ -13,15 +13,15 @@ projected_widget_fields = ['type', 'status', 'href', 'name', 'description']
 class LayoutsApi(MethodView, BaseApi):
     LIMIT_MAX = 50
 
-    def get_one(self, pk):
+    def get_one(self, pk: str):
         pk = LayoutsApi._normalize_pk(pk)
         l_store = layouts_store()
         w_store = widgets_store()
         layout = l_store.get(pk=pk)
         if layout is not None:
             return LayoutsApi._resolve_widgets(layout, w_store)
-        if pk == 'alopecia areata treatment':
-            widgets = generate_mock_widgets(term=pk)
+        if pk.startswith('realsearch '):
+            widgets = generate_mock_widgets(term=pk[len('realsearch '):])
         else:
             widgets = generate_mock_widgets()
         w_pks = [w_store.add(w)[1]['_id'] for w in widgets]
