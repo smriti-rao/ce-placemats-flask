@@ -4,6 +4,10 @@ FROM alpine:3.7
 COPY requirements.txt /tmp/requirements.txt
 
 RUN apk add --no-cache \
+    build-base \
+    openblas-dev \
+    freetype-dev \
+    pkgconfig \
     gcc \
     g++ \
     gfortran \
