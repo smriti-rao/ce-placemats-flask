@@ -1,4 +1,4 @@
-from app.placemats.store import BaseStore
+from app.placemats.stores.store import BaseStore
 import pymongo.collection
 import pymongo.errors
 import logging

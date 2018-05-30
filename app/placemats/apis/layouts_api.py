@@ -1,8 +1,8 @@
 from flask.views import MethodView
-from app.placemats.store_config import layouts_store, widgets_store
-from app.placemats.store import BaseStore
-from app.placemats.base_api import BaseApi
-from app.placemats.mock_widget_generator import generate_mock_widgets
+from app.placemats.stores.store_config import layouts_store, widgets_store
+from app.placemats.stores.store import BaseStore
+from app.placemats.apis.base_api import BaseApi
+from app.placemats.data.mock_widget_generator import generate_mock_widgets
 import logging
 
 logger = logging.getLogger(__name__)

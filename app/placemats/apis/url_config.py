@@ -1,5 +1,5 @@
-from app.placemats.layouts_api import LayoutsApi
-from app.placemats.widgets_api import WidgetsApi
+from app.placemats.apis.layouts_api import LayoutsApi
+from app.placemats.apis.widgets_api import WidgetsApi
 from app.placemats.decorators import jsonify_view
 
 

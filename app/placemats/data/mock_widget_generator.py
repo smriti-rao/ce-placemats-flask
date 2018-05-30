@@ -1,6 +1,6 @@
-from app.placemats.mock_data import *
-from app.placemats.ncbi_client import author_info
-from app.placemats.adjacency_matrix import adjacency_matrix
+from app.placemats.data.mock_data import *
+from app.placemats.data.ncbi_client import author_info
+from app.placemats.data.adjacency_matrix import adjacency_matrix
 
 
 def generate_mock_widgets(term=None):

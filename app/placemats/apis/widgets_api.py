@@ -1,6 +1,6 @@
 from flask.views import MethodView
-from app.placemats.store_config import widgets_store
-from app.placemats.base_api import BaseApi
+from app.placemats.stores.store_config import widgets_store
+from app.placemats.apis.base_api import BaseApi
 from flask import abort
 
 

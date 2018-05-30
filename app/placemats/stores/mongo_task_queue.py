@@ -1,4 +1,4 @@
-from app.placemats.task_queue import TaskQueue, Task
+from app.placemats.stores.task_queue import TaskQueue, Task
 import pymongo.collection
 
 

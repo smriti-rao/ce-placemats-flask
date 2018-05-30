@@ -1,4 +1,4 @@
-from app.placemats.cache import BaseCache
+from app.placemats.stores.cache import BaseCache
 import pymongo.collection
 
 

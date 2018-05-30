@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_swagger import swagger
-from app.placemats.url_config import configure_routes
-import app.placemats.ncbi_client as ncbi
+from app.placemats.apis.url_config import configure_routes
+import app.placemats.data.ncbi_client as ncbi
 
 
 def kwargs_from_environ(environ_to_kwarg):

@@ -1,6 +1,6 @@
 import logging
-from app.placemats.mongo_store import MongoStore
-from app.placemats.store import BaseStore
+from app.placemats.stores.mongo_store import MongoStore
+from app.placemats.stores.store import BaseStore
 import os
 import pymongo
 
