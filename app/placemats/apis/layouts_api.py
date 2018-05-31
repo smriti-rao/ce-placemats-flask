@@ -27,7 +27,7 @@ class LayoutsApi(MethodView, BaseApi):
         q = widgets_task_queue()
         w_pks = []
         for spec in widget_specs_for_term(pk):
-            is_new, new_doc = w_store.add({
+            is_new, new_widget = w_store.add({
                 'type': spec.widget_type,
                 'spec_type': spec.spec_type,
                 'name': spec.name,
@@ -35,7 +35,7 @@ class LayoutsApi(MethodView, BaseApi):
                 'idempotency_key': spec.idempotency_key,
                 'status': STATUS_LOADING,
             })
-            w_pks.append(new_doc['_id'])
+            w_pks.append(new_widget['_id'])
             q.enqueue(spec.idempotency_key, spec._asdict())
         is_new, layout = l_store.add({
             'search_terms': pk,
