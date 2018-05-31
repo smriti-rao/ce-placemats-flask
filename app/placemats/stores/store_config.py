@@ -13,9 +13,9 @@ def _get_store(resource_name) -> BaseStore:
         return MongoStore(mongo_db()[resource_name], '/{}/'.format(resource_name))
 
 
-def layouts_store():
+def layouts_store() -> BaseStore:
     return _get_store('layouts')
 
 
-def widgets_store():
+def widgets_store() -> BaseStore:
     return _get_store('widgets')

@@ -2,12 +2,16 @@ from flask.views import MethodView
 from app.placemats.stores.store_config import layouts_store, widgets_store
 from app.placemats.stores.store import BaseStore
 from app.placemats.apis.base_api import BaseApi
-from app.placemats.data.mock_widget_generator import generate_mock_widgets
+from app.placemats.data.widget_spec import widget_specs_for_term
+from app.placemats.stores.task_queue_config import widgets_task_queue
 import logging
 
 logger = logging.getLogger(__name__)
 
 projected_widget_fields = ['type', 'status', 'href', 'name', 'description']
+
+STATUS_LOADING = 'loading'
+STATUS_COMPLETE = 'complete'
 
 
 class LayoutsApi(MethodView, BaseApi):
@@ -20,14 +24,22 @@ class LayoutsApi(MethodView, BaseApi):
         layout = l_store.get(pk=pk)
         if layout is not None:
             return LayoutsApi._resolve_widgets(layout, w_store)
-        if pk.startswith('realsearch '):
-            widgets = generate_mock_widgets(term=pk[len('realsearch '):])
-        else:
-            widgets = generate_mock_widgets()
-        w_pks = [w_store.add(w)[1]['_id'] for w in widgets]
-        is_new, layout = l_store.add({  # TODO: handle when is_new is False
+        q = widgets_task_queue()
+        w_pks = []
+        for spec in widget_specs_for_term(pk):
+            is_new, new_doc = w_store.add({
+                'type': spec.widget_type,
+                'spec_type': spec.spec_type,
+                'name': spec.name,
+                'description': spec.description,
+                'idempotency_key': spec.idempotency_key,
+                'status': STATUS_LOADING,
+            })
+            w_pks.append(new_doc['_id'])
+            q.enqueue(spec.idempotency_key, spec._asdict())
+        is_new, layout = l_store.add({
             'search_terms': pk,
-            'widgets': w_pks
+            'widgets': w_pks,
         }, pk=pk)
         return LayoutsApi._resolve_widgets(layout, w_store)
 

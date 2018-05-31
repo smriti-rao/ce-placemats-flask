@@ -4,6 +4,7 @@ import pymongo.errors
 import logging
 import uuid
 import urllib.parse
+from typing import Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ class MongoStore(BaseStore):
                 raise MongoStoreException()
         return out
 
-    def add(self, to_add, pk=None):
+    def add(self, to_add, pk=None) -> Tuple[bool, dict]:
         to_add['_id'] = str(uuid.uuid4()) if pk is None else pk
         if self.href_prefix is not None:
             to_add['href'] = '{}{}'.format(self.href_prefix, urllib.parse.quote(to_add['_id'], safe=''))

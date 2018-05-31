@@ -1,6 +1,4 @@
-from collections import namedtuple
-
-Task = namedtuple('Task', ['idempotency_key', 'task_info', 'state'])
+from typing import Tuple
 
 TASK_INIT = 'init'
 TASK_PENDING = 'pending'
@@ -8,9 +6,12 @@ TASK_FAILED = 'failed'
 TASK_SUCCEEDED = 'succeeded'
 
 
-class TaskQueue:
-    def enqueue(self, task: Task):
+class BaseTaskQueue:
+    def enqueue(self, idempotency_key: str, task_info: dict):
         raise NotImplementedError()
 
-    def dequeue(self) -> Task:
+    def dequeue(self) -> Tuple[str, str, dict]:
+        raise NotImplementedError()
+
+    def done(self, idempotency_key: str, token: str, exception: Exception = None):
         raise NotImplementedError()
