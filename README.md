@@ -59,10 +59,12 @@ To test that it worked, run `configure_client()` and then run a search on pubmed
 the value of an expression or explore an API.
 
 #### CLI (optional)
-To run the HTTP server you'll need to first `cd app`.
-Then run `FLASK_ENV=development PYTHONPATH=../ FLASK_APP=main.py python3 -m flask run`
+Both commands are run from the project root:
 
-The task consumer should be run from the project root using the command:
+To run the HTTP server:
+`FLASK_ENV=development FLASK_APP=app/main.py python3 -m flask run`
+
+And the consumer:
 `python3 -m app.placemats.consumer.widgets_task_consumer`
 
 
