@@ -23,7 +23,7 @@ Inside the project root you should create your virtual environment by running:
 
 To actually use the virtual environment you'll need to prepare your shell so that all python-related
 commands take effect there (and only there).
-[The docs for how to 'activate' your shell](https://virtualenv.pypa.io/en/stable/userguide/#activate-script)
+[Here is how to 'activate' your shell](https://virtualenv.pypa.io/en/stable/userguide/#activate-script)
 All commands should be entered from a shell that has been actived.
 
 #### Install dependencies
