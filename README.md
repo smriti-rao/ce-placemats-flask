@@ -58,7 +58,7 @@ To test that it worked, run `configure_client()` and then run a search on pubmed
 `pubmed_search('alopecia areata treatment')`. The REPL is a useful tool whenever you need to double-check
 the value of an expression or explore an API.
 
-#### CLI
+#### CLI (optional)
 To run the HTTP server you'll need to first `cd app`.
 Then run `FLASK_ENV=development PYTHONPATH=../ FLASK_APP=main.py python3 -m flask run`
 
