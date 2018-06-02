@@ -53,7 +53,8 @@ PyCharm's 'Python Console' will open a python shell associated with the project'
 From there you can import code just as you would in source code e.g.
 `from app.placemats.data.ncbi_client import *` would run the code in that package, and import all the defined
 classes and functions into the current shell's scope (similar to how importing a package works when writing
-python source files). To test it out, run `configure_client()` and then run a search on pubmed using
+python source files). Try running the previous command in the REPL during setup.
+To test that it worked, run `configure_client()` and then run a search on pubmed using
 `pubmed_search('alopecia areata treatment')`. The REPL is a useful tool whenever you need to double-check
 the value of an expression or explore an API.
 
