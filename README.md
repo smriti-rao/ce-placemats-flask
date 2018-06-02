@@ -67,6 +67,14 @@ To run the HTTP server:
 And the consumer:
 `python3 -m app.placemats.consumer.widgets_task_consumer`
 
+### Adding new dependencies
+Whenever you add a new dependency, you have to make sure you update both `requirements.txt`
+and re-run the docker image locally before deploying to make sure the container runs OK
+still. To update `requirements.txt`, first `pip install` whatever packages you want to add
+and then run `pip freeze > requirements.txt`. Caution: b.c.o. the way pip works, this will
+snapshot all packages currently installed in your virtual environment. Be sure not to add
+packages that are not actually used in code.
+
 
 ## Running as a docker image
 ### Building and running
