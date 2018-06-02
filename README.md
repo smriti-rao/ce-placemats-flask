@@ -119,5 +119,5 @@ also be done via CLI too; here are
 
 Currently there's a VM already running the placemats image, and it's configured to pull the latest, default
 image (`:latest`). Check out
-[the docs](https://cloud.google.com/compute/docs/containers/deploying-containers) for more details updating
-or changing the image the container is running.
+[the docs](https://cloud.google.com/compute/docs/containers/deploying-containers) for more details on
+updating or changing the image the container is running.
