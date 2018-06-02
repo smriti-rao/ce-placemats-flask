@@ -87,3 +87,35 @@ the max. count to return, and `skip` determines the starting index.
 
 #### List widgets
 `GET /widgets/` -- Max. limit: 10
+
+## Deploying the image as a VM
+### Deploy MongoDB
+You can choose how to host the MongoDB instance. In this case, I've chosen to deploy it as a docker container
+similar to the steps outlined below except using a mongo image instead. You'll just need to make sure that
+instance is accessible to the ce-placemats-flask app, and know the IP address/hostname to reach it.
+
+### Deploy ce-placemats-flask app (Dockerfile)
+The app is packaged as a minimal alpine image with only the necessary dependencies installed.
+Supervisor is used to run two daemon processes: the flask http server and the queue consumer.
+
+The below commands (bash script aliases) are what I use to deploy the docker
+image. They should be run from the project's root directory, and do not require you to be in
+an activated virtual environment shell. You'll need to make sure you're running relatively recent
+versions of gcloud and docker, and that you're authorized to push to the conceptualeyes-169807 project's
+image repository (gcr).
+```bash
+alias gcpDeploy='buildCePlacemats && gcpTagCePlacemats && gcpCePush'
+alias gcpCePush='gcloud docker -- push us.gcr.io/conceptualeyes-169807/ce-placemats-flask'
+alias gcpTagCePlacemats='docker tag ce-placemats us.gcr.io/conceptualeyes-169807/ce-placemats-flask'
+alias buildCePlacemats='docker build -t ce-placemats .'
+```
+Once the image is uploaded, then go to the GCP console and set up a new VM. Select the container-optimized
+VM image, and select the ce-placemats-flaks image. You'll need to make sure you're passing the correct value
+of `MONGO_URL` and `NCBI_EMAIL` as environment variables to the VM (configurable via the console). This can
+also be done via CLI too; here are
+[the docs](https://cloud.google.com/compute/docs/containers/deploying-containers)
+
+Currently there's a VM already running the placemats image, and it's configured to pull the latest, default
+image (`:latest`). Check out
+[the docs](https://cloud.google.com/compute/docs/containers/deploying-containers) for more details updating
+or changing the image the container is running.
