@@ -41,6 +41,10 @@ class MongoStore(BaseStore):
                 return False, self.client.find_one({'_id': to_add['_id']})
             raise MongoStoreException()
 
+    def update(self, pk: str, change_dict: dict):
+        result = self.client.update_one({'_id': pk}, {'$set': change_dict})
+        return result.matched_count == result.modified_count == 1
+
 
 class MongoStoreException(Exception):
     pass

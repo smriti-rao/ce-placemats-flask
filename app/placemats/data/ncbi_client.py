@@ -80,6 +80,11 @@ def pubmed_search(term, skip=0, limit=MAX_PER_PAGE, sort='relevance'):
 
 
 def get_medline_infos(ids):
+    """
+    See https://www.nlm.nih.gov/bsd/mms/medlineelements.html for a description of the medline fields.
+    :param ids:
+    :return:
+    """
     infos = []
     for ids_chunk in chunks(ids, MAX_PER_PAGE):
         infos.extend(efetch(db='pubmed', id=ids_chunk, rettype='medline', retmode='text'))
@@ -112,7 +117,7 @@ def author_info(term, limit=20_000):
             logger.warning('[author_info] Author name not found for term: %s ; PMID: %s', term, m_info['PMID'])
             continue
         pmid = m_info['PMID']
-        for name in m_info['FAU']:
+        for name in m_info['AU']:
             author_to_pmids[name].add(pmid)
             pmid_to_authors[pmid].add(name)
             pmid_to_articles[pmid] = Article(m_info.get('TI'), m_info.get('AB'))

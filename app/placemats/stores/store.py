@@ -7,3 +7,6 @@ class BaseStore:
 
     def add(self, to_add, pk=None) -> Tuple[bool, dict]:
         raise NotImplementedError()
+
+    def update(self, pk: str, change_dict: dict):
+        raise NotImplementedError()

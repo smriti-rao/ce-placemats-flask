@@ -34,7 +34,7 @@ class LayoutsApi(MethodView, BaseApi):
                 'description': spec.description,
                 'idempotency_key': spec.idempotency_key,
                 'status': STATUS_LOADING,
-            })
+            }, pk=spec.idempotency_key)
             w_pks.append(new_widget['_id'])
             q.enqueue(spec.idempotency_key, spec._asdict())
         is_new, layout = l_store.add({
