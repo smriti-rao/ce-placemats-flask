@@ -38,7 +38,11 @@ the `.venv` directory.
 
 #### Fix GeoText for Windows
 [Fix GeoText](https://github.com/elyase/geotext/issues/3)
-In geotext.py (one of our library dependencies), line 45, add `encoding='utf-8'` as a kwarg to `open`.
+In geotext.py (one of our library dependencies), line 45, add `encoding='utf-8'` as a kwarg to `open`
+e.g. change that line to:
+```python
+with open(filename, 'r', encoding='utf-8') as f:
+```
 
 ### Running the code
 #### PyCharm run commands
