@@ -36,6 +36,10 @@ Open PyCharm and then choose to import a project. Select the project root direct
 your virtual environment, but if not you should select the python interpreter (it's a binary) from within
 the `.venv` directory.
 
+#### Fix GeoText for Windows
+[Fix GeoText](https://github.com/elyase/geotext/issues/3)
+In geotext.py (one of our library dependencies), line 45, add `encoding='utf-8'` as a kwarg to `open`.
+
 ### Running the code
 #### PyCharm run commands
 PyCharm should detect the runConfigurations from within the `.idea` directory. These contain the commands
