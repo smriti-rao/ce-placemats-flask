@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="run" type="CompoundRunConfigurationType" factoryName="Compound Run Configuration">
+    <toRun type="PythonConfigurationType" name="consumer" />
+    <toRun type="PythonConfigurationType" name="flask run" />
+    <method />
+  </configuration>
+</component>
