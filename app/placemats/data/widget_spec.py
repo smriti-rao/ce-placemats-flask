@@ -17,6 +17,11 @@ def widget_specs_for_term(term) -> List[WidgetSpec]:
                    'Displays the top-100 (by number of publications) authors and shows the frequency of '
                    'collaboration for each pair.',
                    [term]),
+        build_spec(AUTHOR_WORLD_MAP,
+                   'world_map',
+                   'Where are people publishing on "{}"'.format(term),
+                   'Highlights countries where people are publishing papers on "{}".'.format(term),
+                   [term])
     ]
 
 

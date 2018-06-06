@@ -1,6 +1,7 @@
 import Bio.Entrez
 import Bio.Medline
 import logging
+import typing
 from app.placemats.util import *
 from collections import defaultdict, namedtuple
 
@@ -9,6 +10,11 @@ logger = logging.getLogger(__name__)
 API_KEY = None
 
 MAX_PER_PAGE = 2000
+AUTHOR_NAME = 'AU'
+PMID = 'PMID'
+ABSTRACT = 'AB'
+TITLE = 'TI'
+AFFILIATION = 'AD'
 
 
 def configure_client(email='dev.robot@gmail.com', api_key=None):
@@ -106,6 +112,17 @@ AuthorInfo = namedtuple('AuthorInfo', ['pmid_to_authors', 'author_to_pmids', 'pm
 Article = namedtuple('Article', ['title', 'abstract'])
 
 
+def affiliations(term, limit=20_000) -> typing.Dict[str, str]:
+    medline_infos = get_medline_infos(get_pmids_for_term(term, limit))
+    out = {}
+    for m_info in medline_infos:
+        if AFFILIATION not in m_info:
+            logger.warning('[affiliations] Affiliation not found for term: %s ; PMID: %s', term, m_info[PMID])
+            continue
+        out[m_info[PMID]] = m_info[AFFILIATION]
+    return out
+
+
 def author_info(term, limit=20_000):
     pmids = get_pmids_for_term(term, limit)
     pmid_to_authors = defaultdict(set)
@@ -113,12 +130,12 @@ def author_info(term, limit=20_000):
     pmid_to_articles = {}
     medline_infos = get_medline_infos(pmids)
     for m_info in medline_infos:
-        if 'FAU' not in m_info:
-            logger.warning('[author_info] Author name not found for term: %s ; PMID: %s', term, m_info['PMID'])
+        if AUTHOR_NAME not in m_info:
+            logger.warning('[author_info] Author name not found for term: %s ; PMID: %s', term, m_info[PMID])
             continue
-        pmid = m_info['PMID']
-        for name in m_info['AU']:
+        pmid = m_info[PMID]
+        for name in m_info[AUTHOR_NAME]:
             author_to_pmids[name].add(pmid)
             pmid_to_authors[pmid].add(name)
-            pmid_to_articles[pmid] = Article(m_info.get('TI'), m_info.get('AB'))
+            pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT))
     return AuthorInfo(pmid_to_authors, author_to_pmids, pmid_to_articles)

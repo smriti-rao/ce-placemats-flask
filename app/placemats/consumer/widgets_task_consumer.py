@@ -6,6 +6,7 @@ from app.placemats.stores.store_config import widgets_store
 from app.placemats.data.ncbi_client import *
 from app.placemats.data.adjacency_matrix import *
 from app.placemats.apis.layouts_api import STATUS_COMPLETE
+from app.placemats.data.geo import *
 import time
 import logging
 
@@ -21,10 +22,13 @@ class WidgetsTaskConsumer(BaseConsumer):
         spec_type = task_info['spec_type']
         data = None
         if spec_type == AUTHOR_ADJACENCY:
-            logger.info('Creating data for AUTHOR_ADJACENCY')
             data = self._author_adjacency(task_info)
+        elif spec_type == AUTHOR_WORLD_MAP:
+            data = self._author_world_map(task_info)
         if data is None:
             raise Exception('spec_type not recognized')
+        else:
+            logger.info('Created data for spec_type: %s', spec_type)
         self._update_store(task_info, data)
 
     def _author_adjacency(self, task_info: dict):
@@ -33,6 +37,16 @@ class WidgetsTaskConsumer(BaseConsumer):
         a_to_pmids = ai.author_to_pmids
         top_n_authors = sorted(a_to_pmids.keys(), key=lambda a: len(a_to_pmids[a]), reverse=True)[:100]
         return adjacency_matrix(ai.pmid_to_authors, set(top_n_authors))
+
+    def _author_world_map(self, task_info: dict):
+        term, = task_info['arguments']
+        af = affiliations(term)
+        country_counts, code_to_country = get_country_counts(af.values())
+        return [{
+            'id': code_to_country[code].alpha3,
+            'name': code_to_country[code].name,
+            'articles': country_counts[code],
+        } for code in country_counts]
 
     def _update_store(self, task_info, data):
         store = widgets_store()

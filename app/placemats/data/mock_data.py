@@ -3190,7 +3190,8 @@ COLLAPSIBLE_DATA = {
     }]
 }
 
-BUDGET_CAT_DATA = [{
+BUDGET_CAT_DATA = [
+{
     "label": "Health and Human Services",
     "total": 921605000,
     "num_children": 26,
@@ -3444,7 +3445,8 @@ BUDGET_CAT_LIST = ["Health and Human Services", "State", "Administrative Confere
                    "Undistributed Offsetting Receipts", "United Mine Workers of America Benefit Funds",
                    "United States Enrichment Corporation Fund", "Vietnam Education Foundation", "Other"]
 
-BUDGET_DATA_ARRAY = [{
+BUDGET_DATA_ARRAY = [
+{
     "name": "Benefits Programs",
     "positions": {
         "total": {
