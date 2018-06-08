@@ -39,14 +39,14 @@ class LayoutsApi(MethodView, BaseApi):
             }, pk=spec.idempotency_key)
             w_pks.append(new_widget['_id'])
             q.enqueue(spec.idempotency_key, spec._asdict())
-        if layout is not None and refresh == 0:
+        if layout is not None and refresh == 1:
+            is_update = l_store.update(pk, {'widgets': w_pks})
+            layout = l_store.get(pk, None, None, 0, 0)
+        else:
             is_new, layout = l_store.add({
                 'search_terms': pk,
                 'widgets': w_pks,
             }, pk=pk)
-        else:
-            is_update = l_store.update(pk, {'widgets': w_pks})
-            layout = l_store.get(pk, None, None, 0, 0)
         return LayoutsApi._resolve_widgets(layout, w_store)
 
     def get_list(self, skip=None, limit=None):
