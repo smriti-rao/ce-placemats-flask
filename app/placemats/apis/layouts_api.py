@@ -18,11 +18,13 @@ class LayoutsApi(MethodView, BaseApi):
     LIMIT_MAX = 50
 
     def get_one(self, pk: str):
+        refresh = super(LayoutsApi, self).get_query_or_default('refresh', 0)
+        refresh = int(refresh)
         pk = LayoutsApi._normalize_pk(pk)
         l_store = layouts_store()
         w_store = widgets_store()
         layout = l_store.get(pk=pk)
-        if layout is not None:
+        if layout is not None and refresh == 0:
             return LayoutsApi._resolve_widgets(layout, w_store)
         q = widgets_task_queue()
         w_pks = []
@@ -37,10 +39,14 @@ class LayoutsApi(MethodView, BaseApi):
             }, pk=spec.idempotency_key)
             w_pks.append(new_widget['_id'])
             q.enqueue(spec.idempotency_key, spec._asdict())
-        is_new, layout = l_store.add({
-            'search_terms': pk,
-            'widgets': w_pks,
-        }, pk=pk)
+        if layout is not None and refresh == 0:
+            is_new, layout = l_store.add({
+                'search_terms': pk,
+                'widgets': w_pks,
+            }, pk=pk)
+        else:
+            is_update = l_store.update(pk, {'widgets': w_pks})
+            layout = l_store.get(pk, None, None, 0, 0)
         return LayoutsApi._resolve_widgets(layout, w_store)
 
     def get_list(self, skip=None, limit=None):
