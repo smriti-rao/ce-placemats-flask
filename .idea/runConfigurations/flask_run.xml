@@ -5,12 +5,12 @@
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
-      <env name="FLASK_APP" value="main.py" />
+      <env name="FLASK_APP" value="app/main.py" />
       <env name="FLASK_ENV" value="development" />
       <env name="NCBI_EMAIL" value="robot.user.dev@gmail.com" />
     </envs>
     <option name="SDK_HOME" value="$PROJECT_DIR$/.venv/bin/python" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app" />
+    <option name="WORKING_DIRECTORY" value="" />
     <option name="IS_MODULE_SDK" value="false" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
