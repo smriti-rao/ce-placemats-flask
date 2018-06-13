@@ -15,7 +15,7 @@ PMID = 'PMID'
 ABSTRACT = 'AB'
 TITLE = 'TI'
 AFFILIATION = 'AD'
-
+DATE_OF_PUBLICATION = 'DP'
 
 def configure_client(email='dev.robot@gmail.com', api_key=None):
     """
@@ -109,7 +109,7 @@ def get_pmids_for_term(term, limit):
 
 
 AuthorInfo = namedtuple('AuthorInfo', ['pmid_to_authors', 'author_to_pmids', 'pmid_to_articles'])
-Article = namedtuple('Article', ['title', 'abstract'])
+Article = namedtuple('Article', ['title', 'abstract', 'date_of_publication'])
 
 
 def affiliations(term, limit=20_000) -> typing.Dict[str, str]:
@@ -137,5 +137,17 @@ def author_info(term, limit=20_000):
         for name in m_info[AUTHOR_NAME]:
             author_to_pmids[name].add(pmid)
             pmid_to_authors[pmid].add(name)
-            pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT))
+            publication_year = extract_publication_year(m_info.get(DATE_OF_PUBLICATION))
+            pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT), publication_year)
     return AuthorInfo(pmid_to_authors, author_to_pmids, pmid_to_articles)
+
+def extract_publication_year(date_of_publication):
+    try:
+        if date_of_publication is not None:
+            date_parts = date_of_publication.split()
+            if len(date_parts) > 0:
+                return int(date_parts[0])
+        return None
+    except:
+        print("Unexpected error:")
+    return None
