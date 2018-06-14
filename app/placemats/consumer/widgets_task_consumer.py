@@ -7,6 +7,7 @@ from app.placemats.data.ncbi_client import *
 from app.placemats.data.adjacency_matrix import *
 from app.placemats.apis.layouts_api import STATUS_COMPLETE
 from app.placemats.data.geo import *
+from app.placemats.data.word_cloud import *
 import time
 import logging
 
@@ -25,6 +26,8 @@ class WidgetsTaskConsumer(BaseConsumer):
             data = self._author_adjacency(task_info)
         elif spec_type == AUTHOR_WORLD_MAP:
             data = self._author_world_map(task_info)
+        elif spec_type == WORD_CLOUD_TIME_SERIES:
+            data = self._word_cloud(task_info)
         if data is None:
             raise Exception('spec_type not recognized')
         else:
@@ -47,6 +50,11 @@ class WidgetsTaskConsumer(BaseConsumer):
             'name': code_to_country[code].name,
             'articles': country_counts[code],
         } for code in country_counts]
+
+    def _word_cloud(self, task_info: dict):
+        term, = task_info['arguments']
+        keywords = keyword_info(term)
+        return word_cloud(keywords.pmids_to_keywords, keywords.keyword_to_pmids, keywords.pmid_to_articles)
 
     def _update_store(self, task_info, data):
         store = widgets_store()

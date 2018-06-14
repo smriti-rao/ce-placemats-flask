@@ -16,6 +16,7 @@ ABSTRACT = 'AB'
 TITLE = 'TI'
 AFFILIATION = 'AD'
 DATE_OF_PUBLICATION = 'DP'
+TERMS = 'MH'
 
 def configure_client(email='dev.robot@gmail.com', api_key=None):
     """
@@ -110,7 +111,7 @@ def get_pmids_for_term(term, limit):
 
 AuthorInfo = namedtuple('AuthorInfo', ['pmid_to_authors', 'author_to_pmids', 'pmid_to_articles'])
 Article = namedtuple('Article', ['title', 'abstract', 'date_of_publication'])
-
+KeywordInfo = namedtuple('KeywordInfo', ['pmids_to_keywords', 'keyword_to_pmids','pmid_to_articles'])
 
 def affiliations(term, limit=20_000) -> typing.Dict[str, str]:
     medline_infos = get_medline_infos(get_pmids_for_term(term, limit))
@@ -141,6 +142,25 @@ def author_info(term, limit=20_000):
             pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT), publication_year)
     return AuthorInfo(pmid_to_authors, author_to_pmids, pmid_to_articles)
 
+def keyword_info(term, limit=20_000):
+    pmids = get_pmids_for_term(term, limit)
+    pmids_to_keywords = defaultdict(set)
+    keyword_to_pmids = defaultdict(set)
+    pmid_to_articles = {}
+    medline_infos = get_medline_infos(pmids)
+    for m_info in medline_infos:
+        if TERMS not in m_info:
+            logger.warning('[Terms] MeSH Terms not found for term: %s ; PMID: %s', term, m_info[PMID])
+            continue
+        pmid = m_info[PMID]
+        for each_term in m_info[TERMS]:
+            extracted_term = extract_term(each_term)
+            keyword_to_pmids[extracted_term].add(pmid)
+            pmids_to_keywords[pmid].add(extracted_term)
+            publication_year = extract_publication_year(m_info.get(DATE_OF_PUBLICATION))
+            pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT), publication_year)
+    return KeywordInfo(pmids_to_keywords, keyword_to_pmids, pmid_to_articles)
+
 def extract_publication_year(date_of_publication):
     try:
         if date_of_publication is not None:
@@ -150,4 +170,13 @@ def extract_publication_year(date_of_publication):
         return None
     except:
         print("Unexpected error:")
+    return None
+
+def extract_term(term_value):
+    try:
+        if term_value is not None:
+            term_value_parts = term_value.split('/')
+            return term_value_parts[0].replace('*', '')
+    except:
+        print("Unable to parse term value")
     return None
