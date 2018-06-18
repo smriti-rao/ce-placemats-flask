@@ -41,7 +41,7 @@ class LayoutsApi(MethodView, BaseApi):
             q.enqueue(spec.idempotency_key, spec._asdict())
         if layout is not None and refresh == 1:
             is_update = l_store.update(pk, {'widgets': w_pks})
-            layout = l_store.get(pk, None, None, 0, 0)
+            layout = l_store.get(pk=pk)
         else:
             is_new, layout = l_store.add({
                 'search_terms': pk,
