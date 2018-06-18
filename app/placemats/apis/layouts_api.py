@@ -18,7 +18,7 @@ class LayoutsApi(MethodView, BaseApi):
     LIMIT_MAX = 50
 
     def get_one(self, pk: str):
-        refresh = super(LayoutsApi, self).get_query_or_default('refresh', 0)
+        refresh = self.get_query_or_default('refresh', 0)
         refresh = int(refresh)
         pk = LayoutsApi._normalize_pk(pk)
         l_store = layouts_store()
