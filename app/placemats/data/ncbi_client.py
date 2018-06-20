@@ -142,6 +142,7 @@ def author_info(term, limit=20_000):
             pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT), publication_year)
     return AuthorInfo(pmid_to_authors, author_to_pmids, pmid_to_articles)
 
+
 def keyword_info(term, limit=20_000):
     pmids = get_pmids_for_term(term, limit)
     pmids_to_keywords = defaultdict(set)
@@ -158,6 +159,8 @@ def keyword_info(term, limit=20_000):
             keyword_to_pmids[extracted_term].add(pmid)
             pmids_to_keywords[pmid].add(extracted_term)
             publication_year = extract_publication_year(m_info.get(DATE_OF_PUBLICATION))
+            if publication_year is None:
+                publication_year = extract_publication_year2(m_info.get(DATE_OF_PUBLICATION))
             pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT), publication_year)
     return KeywordInfo(pmids_to_keywords, keyword_to_pmids, pmid_to_articles)
 
@@ -171,6 +174,19 @@ def extract_publication_year(date_of_publication):
     except:
         print("Unexpected error:")
     return None
+
+
+def extract_publication_year2(date_of_publication) :
+    try:
+        if date_of_publication is not None:
+            date_parts = date_of_publication.split("-")
+            if len(date_parts) > 0:
+                return int(date_parts[0])
+        return None
+    except:
+        print("Unexpected error")
+    return None
+
 
 def extract_term(term_value):
     try:
