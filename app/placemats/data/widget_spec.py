@@ -22,7 +22,13 @@ def widget_specs_for_term(term) -> List[WidgetSpec]:
                    WORLD_MAP,
                    'Where are people publishing on "{}"'.format(term),
                    'Highlights countries where people are publishing papers on "{}".'.format(term),
+                   [term]),
+        build_spec(WORD_CLOUD_TIME_SERIES,
+                   WORD_CLOUD,
+                   'Top keywords associated with "{}"'.format(term),
+                   'Description of word cloud',
                    [term])
+
     ]
 
 
