@@ -1,4 +1,4 @@
-
+from datetime import datetime
 
 
 def word_cloud(pmid_to_keywords: dict, keyword_to_pmids: dict, pmid_to_articles):
@@ -8,7 +8,8 @@ def word_cloud(pmid_to_keywords: dict, keyword_to_pmids: dict, pmid_to_articles)
         min_year_result = get_earliest_year(pmids, pmid_to_articles)
         if min_year_result['year'] == 0:
             continue
-        word_cloud_result.append({ 'count': count, 'term': each_keyword, 'publication_time': min_year_result['year'], 'id': min_year_result['pmid'] })
+        pub_time = datetime(year=int(min_year_result['year']), month=int(1), day=int(1))
+        word_cloud_result.append({ 'count': count, 'term': each_keyword, 'publication_time': pub_time.isoformat(), 'id': min_year_result['pmid'] })
     return word_cloud_result
 
 
