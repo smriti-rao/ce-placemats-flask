@@ -22,6 +22,12 @@ def word_cloud(pmid_to_keywords: dict, keyword_to_pmids: dict, pmid_to_articles)
 
             article_pub_year = article_info.date_of_publication
 
+            if not isinstance(article_pub_year, str):
+                if article_pub_year is None:
+                    continue
+                else:
+                    article_pub_year = str(article_pub_year)
+
             if article_pub_year in year_word_cloud:
                 year_word_cloud[article_pub_year]['count'] = year_word_cloud[article_pub_year]['count'] + 1
             else:
