@@ -4,6 +4,7 @@ from app.placemats.stores.store import BaseStore
 from app.placemats.apis.base_api import BaseApi
 from app.placemats.data.widget_spec import widget_specs_for_term
 from app.placemats.stores.task_queue_config import widgets_task_queue
+from app.placemats.data.auth0_validator import requires_auth
 import logging
 
 logger = logging.getLogger(__name__)
@@ -17,6 +18,7 @@ STATUS_COMPLETE = 'complete'
 class LayoutsApi(MethodView, BaseApi):
     LIMIT_MAX = 50
 
+    @requires_auth
     def get_one(self, pk: str):
         refresh = self.get_query_or_default('refresh', 0)
         refresh = int(refresh)
@@ -49,6 +51,7 @@ class LayoutsApi(MethodView, BaseApi):
             }, pk=pk)
         return LayoutsApi._resolve_widgets(layout, w_store)
 
+    @requires_auth
     def get_list(self, skip=None, limit=None):
         w_store = widgets_store()
         return [LayoutsApi._resolve_widgets(x, w_store) for x in layouts_store().get(skip=skip, limit=limit)]

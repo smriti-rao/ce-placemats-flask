@@ -14,6 +14,7 @@ from flask_swagger import swagger
 from app.placemats.apis.url_config import configure_routes
 import app.placemats.data.ncbi_client as ncbi
 from app.placemats.util import kwargs_from_environ
+from app.placemats.data.auth_error import AuthError
 
 
 def apply_cors(flask_app):
@@ -27,6 +28,13 @@ ncbi.configure_client(**kwargs_from_environ({
 }))
 
 app = configure_routes(apply_cors(Flask(__name__)))
+
+
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
 
 
 @app.route('/swagger')
