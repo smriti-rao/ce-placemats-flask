@@ -33,11 +33,15 @@ class LayoutsApi(MethodView, BaseApi):
         # Generate mock data
         if pk == "mock":
             widgets = generate_mock_widgets()
-            w_pks = [w_store.add(w)[1]['_id'] for w in widgets]
+            w_pks = [w_store.add(w, w['type'] + '[\'' + pk + '\']')[1]['_id'] for w in widgets]
             is_new, layout = l_store.add({  # TODO: handle when is_new is False
                 'search_terms': pk,
                 'widgets': w_pks
             }, pk=pk)
+
+            if layout is not None and refresh == 1:
+                is_update = l_store.update(pk, {'widgets': w_pks})
+                layout = l_store.get(pk=pk)
             return LayoutsApi._resolve_widgets(layout, w_store)
 
         q = widgets_task_queue()
