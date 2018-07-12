@@ -5,6 +5,7 @@ from app.placemats.apis.base_api import BaseApi
 from app.placemats.data.widget_spec import widget_specs_for_term
 from app.placemats.stores.task_queue_config import widgets_task_queue
 from app.placemats.data.auth0_validator import requires_auth
+from app.placemats.data.mock_widget_generator import generate_mock_widgets
 import logging
 
 logger = logging.getLogger(__name__)
@@ -28,6 +29,17 @@ class LayoutsApi(MethodView, BaseApi):
         layout = l_store.get(pk=pk)
         if layout is not None and refresh == 0:
             return LayoutsApi._resolve_widgets(layout, w_store)
+
+        # Generate mock data
+        if pk == "mock":
+            widgets = generate_mock_widgets()
+            w_pks = [w_store.add(w)[1]['_id'] for w in widgets]
+            is_new, layout = l_store.add({  # TODO: handle when is_new is False
+                'search_terms': pk,
+                'widgets': w_pks
+            }, pk=pk)
+            return LayoutsApi._resolve_widgets(layout, w_store)
+
         q = widgets_task_queue()
         w_pks = []
         for spec in widget_specs_for_term(pk):

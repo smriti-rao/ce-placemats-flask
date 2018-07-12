@@ -46,7 +46,7 @@ def generate_mock_widgets(term=None):
                 'source2': HIERARCHICAL_DATA_2
             }
         }, {
-            'type': 'time_series',
+            'type': 'word_cloud',
             'status': 'complete',
             'name': 'Question 6 (Time series)',
             'description': '',
@@ -57,10 +57,5 @@ def generate_mock_widgets(term=None):
             'name': 'Question 7 (World map)',
             'description': '',
             'data': WORLD_MAP_DATA
-        }, {
-            'type': '',
-            'status': 'loading',
-            'name': 'Question 8 (Loading)',
-            'description': ''
         }
     ]
