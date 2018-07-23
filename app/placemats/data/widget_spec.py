@@ -27,6 +27,11 @@ def widget_specs_for_term(term) -> List[WidgetSpec]:
                    WORD_CLOUD,
                    'Top keywords associated with "{}"'.format(term),
                    'Description of word cloud',
+                   [term]),
+        build_spec(MESH_KEYWORD_CO_OCCURRENCE,
+                   HIERARCHICAL_DATA,
+                   'Keywords co_occurrences "{}"'.format(term),
+                   'Description of keyword co-occurrence',
                    [term])
 
     ]

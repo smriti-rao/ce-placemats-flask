@@ -202,3 +202,54 @@ def extract_term(term_value):
     except:
         print("Unable to parse term value")
     return None
+
+
+##############
+
+def mesh_search(term,sort = "relevance"):
+    """
+    Connect to MeSH database and search for the exact MeSH Term
+    :param term:
+    :return:
+    """
+    term = term
+    out = esearch(db='mesh', term=term+"[MESH]", retmax=1_00_000)
+    #logger.info('Pubmed search query: %s ; translation-set: %s', term, out['TranslationSet'])
+    return out
+
+def get_mesh_info(ids):
+    mesh_info = []
+    for eachEntry in ids:
+         mesh_info = efetch(db='mesh', id=eachEntry, rettype='full', retmode='text')
+    return mesh_info
+
+
+def get_mesh_category(term):
+    mesh_ids = []
+    mesh_category = set()
+    mesh_information = mesh_search(term) # calling function mesh search
+    mesh_ids = mesh_information['IdList']
+    record = get_mesh_info(mesh_ids)
+    mesh_category = extract_category(record)
+    if len(mesh_category) == 1:
+        mesh_category = " ".join(mesh_category)
+        mesh_category = mesh_category.replace(' ', '_')
+    else:
+        mesh_category = "/".join(mesh_category)
+        mesh_category = mesh_category.replace(' ', '_')
+    return(mesh_category)
+
+
+
+def extract_category(mesh_text):
+    category = set()
+    lookup = 'All MeSH Categories'
+    # This is the character at which All MeSH Categories is found in each record retrieved from MeSH
+
+    while (lookup in mesh_text):
+        idx1 = mesh_text.index(lookup) + len(lookup) + 1
+        idx2 = mesh_text.index("\n", idx1) - len("Category")
+        category.add(mesh_text[idx1:idx2].strip())
+        mesh_text = mesh_text[idx2:]
+    return category
+
