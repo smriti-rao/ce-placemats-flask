@@ -5,6 +5,7 @@ from app.placemats.stores.task_queue_config import widgets_task_queue
 from app.placemats.stores.store_config import widgets_store
 from app.placemats.data.ncbi_client import *
 from app.placemats.data.adjacency_matrix import *
+from app.placemats.data.hierarchical_data import *
 from app.placemats.apis.layouts_api import STATUS_COMPLETE
 from app.placemats.data.geo import *
 from app.placemats.data.word_cloud import *
@@ -28,6 +29,8 @@ class WidgetsTaskConsumer(BaseConsumer):
             data = self._author_world_map(task_info)
         elif spec_type == WORD_CLOUD_TIME_SERIES:
             data = self._word_cloud(task_info)
+        elif spec_type == MESH_KEYWORD_CO_OCCURRENCE:
+            data = self._keyword_co_occurrences(task_info)
         if data is None:
             raise Exception('spec_type not recognized')
         else:
@@ -55,6 +58,11 @@ class WidgetsTaskConsumer(BaseConsumer):
         term, = task_info['arguments']
         keywords = keyword_info(term)
         return word_cloud(keywords.pmids_to_keywords, keywords.keyword_to_pmids, keywords.pmid_to_articles)
+
+    def _keyword_co_occurrences(self, task_info: dict):
+        term, = task_info['arguments']
+        keywords = keyword_info(term)
+        return hierarchical_data(keywords.pmids_to_keywords)
 
     def _update_store(self, task_info, data):
         store = widgets_store()
