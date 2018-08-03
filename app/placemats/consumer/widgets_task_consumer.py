@@ -32,6 +32,8 @@ class WidgetsTaskConsumer(BaseConsumer):
             data = self._word_cloud(task_info)
         elif spec_type == MESH_KEYWORD_CO_OCCURRENCE:
             data = self._keyword_co_occurrences(task_info)
+		elif spec_type == CONCEPT_MAP_KEYWORDS:
+            data = self._concept_map_keywords_journal_author(task_info)
         if data is None:
             raise Exception('spec_type not recognized')
         else:
@@ -65,7 +67,7 @@ class WidgetsTaskConsumer(BaseConsumer):
         keywords = keyword_info(term)
         return hierarchical_data(keywords.pmids_to_keywords)
 
-    def _keyword_co_occurrences(self, task_info: dict):
+    def _concept_map_keywords_journal_author(self, task_info: dict):
         term, = task_info['arguments']
         keywords = keyword_info2(term)
         return concept_map(keywords.pmids_to_keywords, keywords.keyword_to_pmids, keywords.pmid_to_authors, keywords.keyword_to_jtitle, keywords.keyword_to_authors )
