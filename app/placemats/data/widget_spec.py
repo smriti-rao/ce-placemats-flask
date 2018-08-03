@@ -30,8 +30,13 @@ def widget_specs_for_term(term) -> List[WidgetSpec]:
                    [term]),
         build_spec(MESH_KEYWORD_CO_OCCURRENCE,
                    HIERARCHICAL_DATA,
-                   'Keywords co_occurrences "{}"'.format(term),
+                   'Keywords co_occurrences associated with "{}"'.format(term),
                    'Description of keyword co-occurrence',
+                   [term]),
+        build_spec(CONCEPT_MAP_KEYWORDS,
+                   CONCEPT_MAP_DATA,
+                   'Concept map associated with "{}"'.format(term),
+                   'Description of concept map',
                    [term])
 
     ]
