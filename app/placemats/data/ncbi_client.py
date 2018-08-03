@@ -47,7 +47,7 @@ def call(procedure, *args, **kwargs):
     if kwargs.get('rettype') == 'medline':
         out = Bio.Medline.parse(handle)
         out = list(out)
-	elif (procedure.__name__ == "efetch" and kwargs.get('db') == "mesh" and kwargs.get('rettype') == 'full'):
+    elif procedure.__name__ == "efetch" and kwargs.get('db') == "mesh" and kwargs.get('rettype') == 'full':
         out = handle.read()
     else:
         out = Bio.Entrez.read(handle)
