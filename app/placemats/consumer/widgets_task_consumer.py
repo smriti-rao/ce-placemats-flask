@@ -6,6 +6,7 @@ from app.placemats.stores.store_config import widgets_store
 from app.placemats.data.ncbi_client import *
 from app.placemats.data.adjacency_matrix import *
 from app.placemats.data.hierarchical_data import *
+from app.placemats.data.concept_map import *
 from app.placemats.apis.layouts_api import STATUS_COMPLETE
 from app.placemats.data.geo import *
 from app.placemats.data.word_cloud import *
@@ -63,6 +64,11 @@ class WidgetsTaskConsumer(BaseConsumer):
         term, = task_info['arguments']
         keywords = keyword_info(term)
         return hierarchical_data(keywords.pmids_to_keywords)
+
+    def _keyword_co_occurrences(self, task_info: dict):
+        term, = task_info['arguments']
+        keywords = keyword_info2(term)
+        return concept_map(keywords.pmids_to_keywords, keywords.keyword_to_pmids, keywords.pmid_to_authors, keywords.keyword_to_jtitle, keywords.keyword_to_authors )
 
     def _update_store(self, task_info, data):
         store = widgets_store()
