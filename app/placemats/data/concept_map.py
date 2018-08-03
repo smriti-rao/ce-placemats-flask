@@ -43,16 +43,21 @@ def concept_map(pmids_to_keywords: dict, keyword_to_pmids: dict, pmid_to_authors
 
     for each_key in top_keywords:
         mylist = []
-        mylist = mylist + [each_key]
+   
         if each_key in myDictL.keys():
+		mylist = mylist + [each_key]
             string_l = myDictL[each_key]
             if not string_l:
                 listL = []
             else:
                 listL = string_l
         mylist = mylist + [string_l]
-
+		concept_map_data = concept_map_data + [mylist]
+		
+		mylist = []
+		
         if each_key in myDictR.keys():
+		mylist = mylist + [each_key]
             string_r = myDictR[each_key]
             if not string_r:
                 listR = []
