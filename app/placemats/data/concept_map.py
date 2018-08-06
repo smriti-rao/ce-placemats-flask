@@ -13,8 +13,8 @@ def concept_map(pmids_to_keywords: dict, keyword_to_pmids: dict, pmid_to_authors
     top_keywords = compute_frequent_keywords(pmids_to_keywords, CUTOFF=40)
     ## get the pmid
     pmid_list = compute_frequent_keywords(keyword_to_pmids, top_keywords, CUTOFF=None)
-    top_authors = compute_frequent_keywords(pmid_to_authors, pmid_list, CUTOFF=120)
-    top_journals = compute_frequent_keywords(keyword_to_jtitle, top_keywords,CUTOFF=120)
+    top_authors = compute_frequent_keywords(pmid_to_authors, pmid_list, CUTOFF=55)
+    top_journals = compute_frequent_keywords(keyword_to_jtitle, top_keywords,CUTOFF=55)
 
     myDictR =defaultdict()
     myDictL = defaultdict()
@@ -43,27 +43,26 @@ def concept_map(pmids_to_keywords: dict, keyword_to_pmids: dict, pmid_to_authors
 
     for each_key in top_keywords:
         mylist = []
-
+   
         if each_key in myDictL.keys():
-            mylist = mylist + [each_key]
+		mylist = mylist + [each_key]
             string_l = myDictL[each_key]
             if not string_l:
                 listL = []
             else:
                 listL = string_l
         mylist = mylist + [string_l]
-        concept_map_data = concept_map_data + [mylist]
-
-        mylist = []
-
+		concept_map_data = concept_map_data + [mylist]
+		
+		mylist = []
+		
         if each_key in myDictR.keys():
-            mylist = mylist + [each_key]
+		mylist = mylist + [each_key]
             string_r = myDictR[each_key]
             if not string_r:
                 listR = []
             else:
                 listR = [string_r]
-
-    mylist = mylist + [string_r]
-    concept_map_data = concept_map_data + [mylist]
+        mylist = mylist + [string_r]
+        concept_map_data = concept_map_data + [mylist]
     return concept_map_data
