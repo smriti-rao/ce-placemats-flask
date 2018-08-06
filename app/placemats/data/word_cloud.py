@@ -7,8 +7,8 @@ def word_cloud(pmid_to_keywords: dict, keyword_to_pmids: dict, pmid_to_articles)
     keyword_pmid_count = {}
 
     sorted_by_value = sorted(keyword_to_pmids.items(), key=lambda kv: len(kv[1]), reverse=True)
-
-    for index in range(NUMBER_OF_KEYWORDS):
+    length = NUMBER_OF_KEYWORDS if len(sorted_by_value) > NUMBER_OF_KEYWORDS else len(sorted_by_value)
+    for index in range(length):
         each_keyword = sorted_by_value[index][0]
         pmids = keyword_to_pmids[each_keyword]
         year_word_cloud = {}
