@@ -32,7 +32,7 @@ class WidgetsTaskConsumer(BaseConsumer):
             data = self._word_cloud(task_info)
         elif spec_type == MESH_KEYWORD_CO_OCCURRENCE:
             data = self._keyword_co_occurrences(task_info)
-		elif spec_type == CONCEPT_MAP_KEYWORDS:
+        elif spec_type == CONCEPT_MAP_KEYWORDS:
             data = self._concept_map_keywords_journal_author(task_info)
         if data is None:
             raise Exception('spec_type not recognized')
