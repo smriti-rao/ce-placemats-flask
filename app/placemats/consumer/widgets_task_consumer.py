@@ -4,9 +4,11 @@ from app.placemats.consumer.consumer import BaseConsumer
 from app.placemats.stores.task_queue_config import widgets_task_queue
 from app.placemats.stores.store_config import widgets_store
 from app.placemats.data.ncbi_client import *
+from app.placemats.data.reporter_client import *
 from app.placemats.data.adjacency_matrix import *
 from app.placemats.data.hierarchical_data import *
 from app.placemats.data.concept_map import *
+from app.placemats.data.budget_data import *
 from app.placemats.apis.layouts_api import STATUS_COMPLETE
 from app.placemats.data.geo import *
 from app.placemats.data.word_cloud import *
@@ -34,6 +36,9 @@ class WidgetsTaskConsumer(BaseConsumer):
             data = self._keyword_co_occurrences(task_info)
         elif spec_type == CONCEPT_MAP_KEYWORDS:
             data = self._concept_map_keywords_journal_author(task_info)
+        elif spec_type == REPORTER_BUDGET_INFO:
+            data = self._project_cost_information(task_info)
+
         if data is None:
             raise Exception('spec_type not recognized')
         else:
@@ -71,6 +76,11 @@ class WidgetsTaskConsumer(BaseConsumer):
         term, = task_info['arguments']
         keywords = keyword_info2(term)
         return concept_map(keywords.pmids_to_keywords, keywords.keyword_to_pmids, keywords.pmid_to_authors, keywords.keyword_to_jtitle, keywords.keyword_to_authors )
+
+    def _project_cost_information(self, task_info: dict):
+        term, = task_info['arguments']
+        budget_array = reporter_search(term)
+        return budget_data_array(budget_array.reporter_info)
 
     def _update_store(self, task_info, data):
         store = widgets_store()
