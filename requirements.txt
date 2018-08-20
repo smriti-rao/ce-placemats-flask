@@ -19,5 +19,7 @@ rake-nltk==1.0.3
 scipy==1.1.0
 six==1.11.0
 Werkzeug==0.14.1
+requests==2.19
 python-dotenv
 python-jose-cryptodome
+
