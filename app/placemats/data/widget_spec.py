@@ -37,6 +37,11 @@ def widget_specs_for_term(term) -> List[WidgetSpec]:
                    CONCEPT_MAP_DATA,
                    'Concept map associated with "{}"'.format(term),
                    'Description of concept map',
+                   [term]),
+        build_spec(REPORTER_BUDGET_INFO,
+                   BUDGET_ARRAY_DATA,
+                   'Funding associated with "{}"'.format(term),
+                   'Description of budget information',
                    [term])
 
     ]
