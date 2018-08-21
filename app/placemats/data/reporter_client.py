@@ -38,7 +38,7 @@ def reporter_search(term):
             offset_value += 50
 
         # Sort by Total Amount; Descending Order
-        reporter_info_sorted = sorted(reporter_info, key=lambda k: k['totalCostAmount'], reverse=True)
+        reporter_info_sorted = sorted(reporter_info, key=lambda k: 0 if k['totalCostAmount'] is None else k['totalCostAmount'], reverse=True)
     return BudgetInfo(reporter_info_sorted)
 
 
