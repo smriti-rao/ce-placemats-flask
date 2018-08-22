@@ -31,7 +31,8 @@ def reporter_search(term):
     while True:
         # loop body
         info = get_response(term, offset_value)
-        if offset_value > TOTAL_RECORDS:
+        length = len(info['items'])
+        if offset_value > TOTAL_RECORDS or length <= 0:
             break
         else:
             reporter_info = reporter_info + info['items']
