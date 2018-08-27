@@ -37,14 +37,20 @@ def radial_tree(pmids_to_keywords: dict, term):
 
     # Generate the data structure to output
     axis_depth1 = []
+    # Select 7 elements as the value for inner branch
+    branch2_value = 7
     # Select only first 5 key,values to assemble to the collapsible data
     x = itertools.islice(keyword_ce_dict_sorted.items(), 0, 5)
     for k, v in x:
         axis_depth2 = []
-        # Select only first 7 values for 2nd level branching
-        y = itertools.islice(v, 0, 7)
-        for each_y in y:
-            axis_depth2.append({'name': each_y, 'size': key_counter[each_y]})
-        axis_depth1.append({'name': k, 'children': axis_depth2})
+        for each_v in v:
+            axis_depth2.append({'name': each_v, 'size': key_counter[each_v]})
+        axis_depth2_sorted = sorted(axis_depth2, key=lambda user: user['size'], reverse=True)
+        branch2 = len(axis_depth2_sorted)
+        if branch2 > branch2_value:
+            branch2 = branch2_value
+        axis_depth1.append({'name': k, 'children': axis_depth2_sorted[:branch2]})
 
-    return {'name': term.capitalize(), 'children': axis_depth1}
+    return([{'name': term, 'children': axis_depth1}])
+
+
