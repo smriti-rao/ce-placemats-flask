@@ -9,6 +9,7 @@ from app.placemats.data.adjacency_matrix import *
 from app.placemats.data.hierarchical_data import *
 from app.placemats.data.concept_map import *
 from app.placemats.data.budget_data import *
+from app.placemats.data.radial_tree import *
 from app.placemats.apis.layouts_api import STATUS_COMPLETE
 from app.placemats.data.geo import *
 from app.placemats.data.word_cloud import *
@@ -38,6 +39,8 @@ class WidgetsTaskConsumer(BaseConsumer):
             data = self._concept_map_keywords_journal_author(task_info)
         elif spec_type == REPORTER_BUDGET_INFO:
             data = self._project_cost_information(task_info)
+        elif spec_type == RADIAL_TREE_KEYWORDS_CE:
+            data = self._radial_tree(task_info)
 
         if data is None:
             raise Exception('spec_type not recognized')
@@ -81,6 +84,12 @@ class WidgetsTaskConsumer(BaseConsumer):
         term, = task_info['arguments']
         budget_array = reporter_search(term)
         return budget_data_array(budget_array.reporter_info)
+
+    def _radial(self, task_info: dict):
+        term, = task_info['arguments']
+        keywords = keyword_info_astericks(term)
+        return radial_tree(keywords.pmids_to_keywords, term)
+
 
     def _update_store(self, task_info, data):
         store = widgets_store()
