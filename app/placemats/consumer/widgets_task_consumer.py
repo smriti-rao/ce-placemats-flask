@@ -67,7 +67,7 @@ class WidgetsTaskConsumer(BaseConsumer):
 
     def _word_cloud(self, task_info: dict):
         term, = task_info['arguments']
-        keywords = keyword_info(term)
+        keywords = keyword_info_astericks(term)
         return word_cloud(keywords.pmids_to_keywords, keywords.keyword_to_pmids, keywords.pmid_to_articles)
 
     def _keyword_co_occurrences(self, task_info: dict):
@@ -85,7 +85,7 @@ class WidgetsTaskConsumer(BaseConsumer):
         budget_array = reporter_search(term)
         return budget_data_array(budget_array.reporter_info)
 
-    def _radial(self, task_info: dict):
+    def _radial_tree(self, task_info: dict):
         term, = task_info['arguments']
         keywords = keyword_info_astericks(term)
         return radial_tree(keywords.pmids_to_keywords, term)
