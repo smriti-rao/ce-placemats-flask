@@ -42,10 +42,15 @@ def widget_specs_for_term(term) -> List[WidgetSpec]:
                    BUDGET_ARRAY_DATA,
                    'Funding associated with "{}"'.format(term),
                    'Description of budget information',
-                   [term])
+                   [term]),
+        build_spec(RADIAL_TREE_KEYWORDS_CE,
+                   RADIAL_TREE_DATA,
+                   'concept terms and keywords "{}"'.format(term),
+                   'Description of radial tree',
+                   [term]),
+
 
     ]
-
 
 def build_spec(spec_type, widget_type, name, description, arguments):
     idempotency_key = '_'.join([spec_type, widget_type, str(arguments)])

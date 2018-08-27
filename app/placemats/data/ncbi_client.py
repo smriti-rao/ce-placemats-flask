@@ -167,7 +167,44 @@ def keyword_info(term, limit=20_000):
             pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT), publication_year)
     return KeywordInfo(pmids_to_keywords, keyword_to_pmids, pmid_to_articles)
 
+def keyword_info_astericks(term, limit=20_000):
+    '''
+    same as keyword_info but only for keywords with *
+    Used for Visual 7
+    :param term:
+    :param limit:
+    :return:
+    '''
+    pmids = get_pmids_for_term(term, limit)
+    pmids_to_keywords = defaultdict(set)
+    keyword_to_pmids = defaultdict(set)
+    pmid_to_articles = {}
+    medline_infos = get_medline_infos(pmids)
+
+    for m_info in medline_infos:
+        if TERMS not in m_info:
+            logger.warning('[Terms] MeSH Terms not found for term: %s ; PMID: %s', term, m_info[PMID])
+            continue
+        pmid = m_info[PMID]
+        for each_term in m_info[TERMS]:
+            if '*' not in each_term:
+                continue
+            else:
+                extracted_term = extract_term(each_term)
+                keyword_to_pmids[extracted_term].add(pmid)
+                pmids_to_keywords[pmid].add(extracted_term)
+                publication_year = extract_publication_year(m_info.get(DATE_OF_PUBLICATION))
+                pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT), publication_year)
+    return KeywordInfo(pmids_to_keywords, keyword_to_pmids, pmid_to_articles)
+
 def keyword_info2(term, limit=20_000):
+    '''
+    Used for Visual 5 Concept Maps
+    Uses only keywords with *
+    :param term:
+    :param limit:
+    :return:
+    '''
     pmids = get_pmids_for_term(term, limit)
     pmids_to_keywords = defaultdict(set)
     keyword_to_pmids = defaultdict(set)
@@ -188,16 +225,18 @@ def keyword_info2(term, limit=20_000):
         pmid = m_info[PMID]
 
         for each_term in m_info[TERMS]:
-            extracted_term = extract_term(each_term)
-            keyword_to_pmids[extracted_term].add(pmid)
-            pmids_to_keywords[pmid].add(extracted_term)
-            keyword_to_jtitle[extracted_term].add(m_info[J_TITLE])
+            if '*' not in each_term:
+                continue
+            else:
+                extracted_term = extract_term(each_term)
+                keyword_to_pmids[extracted_term].add(pmid)
+                pmids_to_keywords[pmid].add(extracted_term)
+                keyword_to_jtitle[extracted_term].add(m_info[J_TITLE])
 
-            for each_author in m_info[AUTHOR_NAME][0:2]:
-                keyword_to_authors[extracted_term].add(each_author)
+                for each_author in m_info[AUTHOR_NAME][0:2]:
+                    keyword_to_authors[extracted_term].add(each_author)
+                    pmid_to_authors[pmid].add(each_author)
 
-        for each_author in m_info[AUTHOR_NAME][0:2]:
-            pmid_to_authors[pmid].add(each_author)
 
     return KeywordInfo2(pmids_to_keywords, keyword_to_pmids, pmid_to_authors, keyword_to_jtitle, keyword_to_authors)
 
