@@ -41,10 +41,10 @@ def radial_tree(pmids_to_keywords: dict, term):
     x = itertools.islice(keyword_ce_dict_sorted.items(), 0, 5)
     for k, v in x:
         axis_depth2 = []
-        for each_v in v:
-            axis_depth2.append({'name': each_v, 'size': key_counter[each_v]})
+        # Select only first 7 values for 2nd level branching
+        y = itertools.islice(v, 0, 7)
+        for each_y in y:
+            axis_depth2.append({'name': each_y, 'size': key_counter[each_y]})
         axis_depth1.append({'name': k, 'children': axis_depth2})
 
-    return([{'name': term, 'children': axis_depth1}])
-
-
+    return {'name': term.capitalize(), 'children': axis_depth1}
