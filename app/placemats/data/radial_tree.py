@@ -51,6 +51,6 @@ def radial_tree(pmids_to_keywords: dict, term):
             branch2 = branch2_value
         axis_depth1.append({'name': k, 'children': axis_depth2_sorted[:branch2]})
 
-    return([{'name': term, 'children': axis_depth1}])
+    return({'name': term, 'children': axis_depth1})
 
 
