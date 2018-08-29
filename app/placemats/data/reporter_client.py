@@ -10,7 +10,8 @@ URL = 'https://api.federalreporter.nih.gov/v1/projects/search?'
 LIMIT = '50'
 TOTAL_RECORDS = 1000
 
-BudgetInfo = namedtuple('BudgetInfo', ['reporter_info'])
+
+BudgetInfo = namedtuple('BudgetInfo', ['reporter_info','grant_count'])
 
 
 def get_response(term, offset_value):
@@ -27,20 +28,21 @@ def reporter_search(term):
     term = term
     offset_value = 1
     reporter_info = []
-
+    grant_count = ''
     while True:
         # loop body
         info = get_response(term, offset_value)
-        length = len(info['items'])
-        if offset_value > TOTAL_RECORDS or length <= 0:
+        if offset_value > TOTAL_RECORDS:
             break
         else:
+            grant_count = info['totalCount']
             reporter_info = reporter_info + info['items']
             offset_value += 50
+            # Sort by Total Amount; Descending Order
+    #reporter_removed = reporter_info.filter(lambda x: x.get('totalCostAmount') not in None, reporter_info )
+    reporter_info_sorted = sorted(reporter_info, key=lambda k: k['totalCostAmount'], reverse=True)
 
-        # Sort by Total Amount; Descending Order
-        reporter_info_sorted = sorted(reporter_info, key=lambda k: 0 if k['totalCostAmount'] is None else k['totalCostAmount'], reverse=True)
-    return BudgetInfo(reporter_info_sorted)
+    return BudgetInfo(reporter_info_sorted,grant_count)
 
 
 def time_duration(dateStart,dateEnd):
