@@ -32,15 +32,16 @@ def reporter_search(term):
     while True:
         # loop body
         info = get_response(term, offset_value)
-        if offset_value > TOTAL_RECORDS:
+        grant_count = info['totalCount']
+        if (offset_value > grant_count) or (offset_value > TOTAL_RECORDS):
             break
         else:
-            grant_count = info['totalCount']
+
             reporter_info = reporter_info + info['items']
             offset_value += 50
-            # Sort by Total Amount; Descending Order
-    #reporter_removed = reporter_info.filter(lambda x: x.get('totalCostAmount') not in None, reporter_info )
-    reporter_info_sorted = sorted(reporter_info, key=lambda k: k['totalCostAmount'], reverse=True)
+            # Sort by Total Amount; Descending Order, and missing value
+
+    reporter_info_sorted = sorted(reporter_info, key=lambda k: (k['totalCostAmount'] is None, k['totalCostAmount']), reverse=True)
 
     return BudgetInfo(reporter_info_sorted,grant_count)
 
