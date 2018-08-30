@@ -82,4 +82,5 @@ def budget_data_array(info_list: list, total_grant_count = 0):
         arr_id += 1
         if arr_id > max_arr_length:
             break
-    return BudgetDetails(total_grant_count,cumulative_grant_amount,budget_data)
+
+    return total_grant_count, cumulative_grant_amount, budget_data
