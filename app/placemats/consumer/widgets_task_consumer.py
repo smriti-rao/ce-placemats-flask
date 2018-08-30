@@ -84,7 +84,7 @@ class WidgetsTaskConsumer(BaseConsumer):
         term, = task_info['arguments']
         budget_array = reporter_search(term)
         total_grant_count, cumulative_grant_amount, budget_data = budget_data_array(budget_array.reporter_info, budget_array.grant_count)
-        return[{'total_grant_count': total_grant_count,
+        return [{'total_grant_count': total_grant_count,
                 'cumulative_grant_amount': cumulative_grant_amount,
                 'budget_data_array': budget_data
                 }]
