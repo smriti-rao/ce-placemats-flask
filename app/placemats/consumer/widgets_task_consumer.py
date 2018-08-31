@@ -52,7 +52,7 @@ class WidgetsTaskConsumer(BaseConsumer):
         term, = task_info['arguments']
         ai = author_info(term)
         a_to_pmids = ai.author_to_pmids
-        top_n_authors = sorted(a_to_pmids.keys(), key=lambda a: len(a_to_pmids[a]), reverse=True)[:100]
+        top_n_authors = sorted(a_to_pmids.keys(), key=lambda a: len(a_to_pmids[a]), reverse=True)[:75]
         return adjacency_matrix(ai.pmid_to_authors, set(top_n_authors))
 
     def _author_world_map(self, task_info: dict):
