@@ -82,12 +82,14 @@ class WidgetsTaskConsumer(BaseConsumer):
 
     def _project_cost_information(self, task_info: dict):
         term, = task_info['arguments']
-        budget_array = reporter_search(term)
-        total_grant_count, cumulative_grant_amount, budget_data = budget_data_array(budget_array.reporter_info, budget_array.grant_count)
+        budget_details = reporter_search(term)
+        total_grant_count, cumulative_grant_amount, budget_data_array, budget_cat_data, budget_cat_list = all_budget_array(budget_details.reporter_info, budget_details.grant_count)
         return [{'total_grant_count': total_grant_count,
-                'cumulative_grant_amount': cumulative_grant_amount,
-                'budget_data_array': budget_data
-                }]
+                 'cumulative_grant_amount': cumulative_grant_amount,
+                 'budget_data_array': budget_data_array,
+                 'budget_cat_data': budget_cat_data,
+                 'budget_cat_list': budget_cat_list
+                 }]
 
     def _radial_tree(self, task_info: dict):
         term, = task_info['arguments']
