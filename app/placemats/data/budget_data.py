@@ -15,7 +15,8 @@ IC = 'ic'
 DEPT = 'department'
 AGENCY = 'agency'
 
-BudgetDetails = namedtuple('BudgetDetails', ['total_grant_count', 'cumulative_grant_amount', 'budget_data_array','budget_cat_data','budget_cat_list'])
+BudgetDetails = namedtuple('BudgetDetails', ['total_grant_count', 'cumulative_grant_amount', 'budget_data_array',
+                                             'budget_cat_data','budget_cat_list'])
 def all_budget_array(info_list: list, total_grant_count = 0):
     total_grant_count = total_grant_count
     cumulative_grant_amount = 0
@@ -63,7 +64,7 @@ def all_budget_array(info_list: list, total_grant_count = 0):
 
         if each_record[AGENCY] == 'NIH':
             idx = each_record['projectNumber'][1]
-            if idx in ['F', 'K', 'P', 'R', 'S', 'D', 'U']:
+            if idx in ['F', 'K', 'P', 'R', 'S', 'T', 'D', 'U']:
                 grant_type = each_record['projectNumber'][1:4]
                 grant_legend = idx
             else:
