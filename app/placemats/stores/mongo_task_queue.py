@@ -30,7 +30,12 @@ class MongoTaskQueue(BaseTaskQueue):
                 continue
             return d['_id'], token, d['data']['task_info']
 
-    def done(self, idempotency_key: str, token: str, exception: Exception = None):
-        state = TASK_SUCCEEDED if exception is None else TASK_FAILED
+    def done(self, idempotency_key: str, token: str, exception: Exception = None, should_reset_task: bool = False):
+        if should_reset_task:
+            state = TASK_INIT
+        elif exception is None:
+            state = TASK_SUCCEEDED
+        else:
+            state = TASK_FAILED
         self.coll.find_one_and_update(
             {'_id': idempotency_key, 'data.state': TASK_PENDING, 'data.token': token}, {'$set': {'data.state': state}})

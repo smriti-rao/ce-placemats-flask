@@ -13,5 +13,5 @@ class BaseTaskQueue:
     def dequeue(self) -> Tuple[str, str, dict]:
         raise NotImplementedError()
 
-    def done(self, idempotency_key: str, token: str, exception: Exception = None):
+    def done(self, idempotency_key: str, token: str, exception: Exception = None, should_reset_task: bool = False):
         raise NotImplementedError()

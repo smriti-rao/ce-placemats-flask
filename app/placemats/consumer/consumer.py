@@ -1,6 +1,6 @@
-from app.placemats.stores.task_queue import BaseTaskQueue
-import time
 import logging
+
+from app.placemats.stores.task_queue import BaseTaskQueue
 
 logger = logging.getLogger(__name__)
 
@@ -15,22 +15,22 @@ class BaseConsumer:
 
     def consume_forever(self):
         while True:
-            try:
-                idempotency_key, token, task_info = self.q.dequeue()
-            except Exception as e:
-                logger.error('Exception trying to dequeue task: %s Sleeping...will try again soon', e)
-                time.sleep(10)
-                continue
+            idempotency_key, token, task_info = self.q.dequeue()
             try:
                 logger.info('Consuming task: %s', task_info)
                 self.consume_one(task_info)
+            except KeyboardInterrupt as ki:
+                logger.info('Received SIGINT while handling task %s; resetting and then will exit', task_info)
+                error = ki
             except Exception as e:
                 logger.error('Exception consuming task: %s', e)
-                exception = e
+                error = e
             else:
                 logger.info('Consumed task successfully')
-                exception = None
-            try:
-                self.q.done(idempotency_key=idempotency_key, token=token, exception=exception)
-            except Exception as e:
-                logger.error('Error marking task "done": %s', e)
+                error = None
+            interrupted = isinstance(error, KeyboardInterrupt)
+            self.q.done(idempotency_key=idempotency_key, token=token, exception=error,
+                        should_reset_task=interrupted)
+            if interrupted:
+                logger.info('Re-raising KeyboardInterrupt')
+                raise error

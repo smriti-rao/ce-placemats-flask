@@ -5,6 +5,7 @@ from flask import request, _request_ctx_stack
 from jose import jwt
 from app.placemats.data.auth_error import AuthError
 from app.placemats.data.auth0_config import *
+import os
 
 
 # Format error response and append status code
@@ -40,11 +41,15 @@ def get_token_auth_header():
 def requires_auth(f):
     """Determines if the Access Token is valid
     """
+    skip_auth0 = os.environ.get('SKIP_AUTH0') is not None
 
     @wraps(f)
     def decorated(*args, **kwargs):
+        if skip_auth0:
+            print('***** SKIPPING AUTH0 VALIDATION -- Did you mean to set SKIP_AUTH0 ? *****')
+            return f(*args, **kwargs)
         token = get_token_auth_header()
-        json_url = urlopen("https://" + AUTH0_DOMAIN + "/.well-known/jwks.json")
+        json_url = urlopen("https://" + AUTH0_DOMAIN + "/.well-known/jwks.json")  # TODO caching
         jwks = json.loads(json_url.read())
 
         try:

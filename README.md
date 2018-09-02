@@ -123,9 +123,11 @@ versions of gcloud and docker, and that you're authorized to push to the concept
 image repository (gcr).
 ```bash
 alias gcpDeploy='buildCePlacemats && gcpTagCePlacemats && gcpCePush'
-alias gcpCePush='gcloud docker -- push us.gcr.io/conceptualeyes-169807/ce-placemats-flask'
-alias gcpTagCePlacemats='docker tag ce-placemats us.gcr.io/conceptualeyes-169807/ce-placemats-flask'
+alias gcpCePush='gcloud docker -- push us.gcr.io/conceptualeyes-169807/ce-placemats-flask:latest'
+alias gcpTagCePlacemats='docker tag ce-placemats us.gcr.io/conceptualeyes-169807/ce-placemats-flask:latest'
 alias buildCePlacemats='docker build -t ce-placemats .'
+alias runCePlacemats='docker run -p 8080:80 -e NCBI_EMAIL=robot@gmail.com -e MONGO_URL=mongodb://host.docker.internal:27017 -e SKIP_AUTH0=TRUE ce-placemats'
+alias buildAndRunCePlacemats='buildCePlacemats && runCePlacemats'
 ```
 Once the image is uploaded, then go to the GCP console and set up a new VM. Select the container-optimized
 VM image, and select the ce-placemats-flaks image. You'll need to make sure you're passing the correct value

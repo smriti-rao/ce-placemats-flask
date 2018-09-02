@@ -78,12 +78,14 @@ class WidgetsTaskConsumer(BaseConsumer):
     def _concept_map_keywords_journal_author(self, task_info: dict):
         term, = task_info['arguments']
         keywords = keyword_info2(term)
-        return concept_map(keywords.pmids_to_keywords, keywords.keyword_to_pmids, keywords.pmid_to_authors, keywords.keyword_to_jtitle, keywords.keyword_to_authors )
+        return concept_map(keywords.pmids_to_keywords, keywords.keyword_to_pmids, keywords.pmid_to_authors,
+                           keywords.keyword_to_jtitle, keywords.keyword_to_authors)
 
     def _project_cost_information(self, task_info: dict):
         term, = task_info['arguments']
         budget_details = reporter_search(term)
-        total_grant_count, cumulative_grant_amount, budget_data_array, budget_cat_data, budget_cat_list = all_budget_array(budget_details.reporter_info, budget_details.grant_count)
+        total_grant_count, cumulative_grant_amount, budget_data_array, budget_cat_data, budget_cat_list = all_budget_array(
+            budget_details.reporter_info, budget_details.grant_count)
         return [{'total_grant_count': total_grant_count,
                  'cumulative_grant_amount': cumulative_grant_amount,
                  'budget_data_array': budget_data_array,
@@ -95,7 +97,6 @@ class WidgetsTaskConsumer(BaseConsumer):
         term, = task_info['arguments']
         keywords = keyword_info_astericks(term)
         return radial_tree(keywords.pmids_to_keywords, term)
-
 
     def _update_store(self, task_info, data):
         store = widgets_store()
@@ -115,16 +116,7 @@ def main():
         'NCBI_API_KEY': 'api_key',
     }))
 
-    while True:
-        try:
-            WidgetsTaskConsumer().consume_forever()
-        except KeyboardInterrupt:
-            logger.info('Ctrl-C received. Exiting...')
-            break
-        except:
-            logger.error('Error while running consumer forever. Sleeping and will try again.')
-            time.sleep(10)
-            continue
+    WidgetsTaskConsumer().consume_forever()
 
 
 if __name__ == '__main__':
