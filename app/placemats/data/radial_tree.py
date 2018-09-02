@@ -5,7 +5,7 @@ from collections import Counter
 from itertools import chain
 import itertools
 from app.placemats.data.ncbi_client import *
-from app.placemats.data.ce_terms import CE_TERMS
+from app.placemats.data.ce_terms import ce_terms
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ def radial_tree(pmids_to_keywords: dict, term):
     top_keywords = [var[1][0] for var in enumerate(most_occur)]
 
     for each_keyword in top_keywords:
-        for key, value in CE_TERMS.items():
+        for key, value in ce_terms.items():
             if key == each_keyword:
                 ce_concept = value
                 keyword_ce_dict[ce_concept].add(each_keyword)
