@@ -4,4 +4,4 @@ from app.placemats.stores.mongo_client import mongo_db
 
 
 def widgets_task_queue() -> BaseTaskQueue:
-    return MongoTaskQueue(mongo_db()['widgets_task_queue'])
+    return MongoTaskQueue(mongo_db()['widgets_task_queue_v2'])
