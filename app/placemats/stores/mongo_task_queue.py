@@ -5,13 +5,21 @@ from pymongo import ReturnDocument
 import time
 import uuid
 from typing import Tuple
+import os
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def get_queue_ttl():
+    return int(os.getenv('TASK_QUEUE_TTL', '86400'))
 
 
 class MongoTaskQueue(BaseTaskQueue):
     def __init__(self, collection: pymongo.collection.Collection) -> None:
         super().__init__()
         self.coll = collection
-        self.cache = MongoCache(self.coll, ttl=3_600)
+        self.cache = MongoCache(self.coll, ttl=get_queue_ttl())
 
     def enqueue(self, idempotency_key: str, task_info: dict):
         self.cache.set(key=idempotency_key, data={
@@ -32,10 +40,10 @@ class MongoTaskQueue(BaseTaskQueue):
 
     def done(self, idempotency_key: str, token: str, exception: Exception = None, should_reset_task: bool = False):
         if should_reset_task:
-            state = TASK_INIT
-        elif exception is None:
-            state = TASK_SUCCEEDED
-        else:
-            state = TASK_FAILED
-        self.coll.find_one_and_update(
-            {'_id': idempotency_key, 'data.state': TASK_PENDING, 'data.token': token}, {'$set': {'data.state': state}})
+            self.coll.find_one_and_update(
+                {'_id': idempotency_key, 'data.state': TASK_PENDING, 'data.token': token},
+                {'$set': {'data.state': TASK_INIT}})
+            return
+        if exception is not None:
+            logger.error('Deleting failed task. Error: %s , Key: %s', exception, idempotency_key)
+        self.coll.find_one_and_delete({'_id': idempotency_key, 'data.state': TASK_PENDING, 'data.token': token})
