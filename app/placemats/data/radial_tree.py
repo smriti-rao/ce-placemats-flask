@@ -27,6 +27,8 @@ def radial_tree(pmids_to_keywords: dict, term):
     top_keywords = [var[1][0] for var in enumerate(most_occur)]
 
     for each_keyword in top_keywords:
+        if each_keyword.lower() == term.lower():
+            continue
         for key, value in ce_terms.items():
             if key == each_keyword:
                 ce_concept = value
