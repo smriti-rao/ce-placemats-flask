@@ -139,3 +139,6 @@ Currently there's a VM already running the placemats image, and it's configured 
 image (`:latest`). Check out
 [the docs](https://cloud.google.com/compute/docs/containers/deploying-containers) for more details on
 updating or changing the image the container is running.
+
+### Deploy ce-placemats-flask app (Dockerfile) to GCP load balancer
+Once you build, tag and push the local image to google cloud repository, you will need to 'bounce' (restart) all the instances in the instance group 'ce-placemats-2'.
