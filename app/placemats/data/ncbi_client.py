@@ -4,8 +4,6 @@ import logging
 import typing
 from app.placemats.util import *
 from collections import defaultdict, namedtuple
-import random
-import string
 
 logger = logging.getLogger(__name__)
 
@@ -22,19 +20,12 @@ TERMS = 'MH'
 J_TITLE = 'JT'
 AUTHOR_NAME = 'AU'
 
-
 def configure_client(email='dev.robot@gmail.com', api_key=None):
     """
     Must be called once before calling any of the other API's
-
-    HACK: When deployed, we wanna assign a unique email to each instance to avoid any throttling.
     :param email:
     :param api_key:
     """
-    if email == 'ncbi.robot.user@gmail.com':
-        email = 'ncbi.robot.{}-user@gmail.com'.format(
-            ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)))
-        logger.info('Setting email to %s', email)
     Bio.Entrez.email = email
     global API_KEY
     API_KEY = api_key
@@ -189,6 +180,7 @@ def keyword_info_astericks(term, limit=20_000):
     keyword_to_pmids = defaultdict(set)
     pmid_to_articles = {}
     medline_infos = get_medline_infos(pmids)
+    star = False
 
     for m_info in medline_infos:
         if TERMS not in m_info:
@@ -200,10 +192,14 @@ def keyword_info_astericks(term, limit=20_000):
                 continue
             else:
                 extracted_term = extract_term(each_term)
-                keyword_to_pmids[extracted_term].add(pmid)
-                pmids_to_keywords[pmid].add(extracted_term)
-                publication_year = extract_publication_year(m_info.get(DATE_OF_PUBLICATION))
-                pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT), publication_year)
+                if extracted_term.lower() != term.lower():
+                    keyword_to_pmids[extracted_term].add(pmid)
+                    pmids_to_keywords[pmid].add(extracted_term)
+                    star = True
+        if star:
+            publication_year = extract_publication_year(m_info.get(DATE_OF_PUBLICATION))
+            pmid_to_articles[pmid] = Article(m_info.get(TITLE), m_info.get(ABSTRACT), publication_year)
+
     return KeywordInfo(pmids_to_keywords, keyword_to_pmids, pmid_to_articles)
 
 def keyword_info2(term, limit=20_000):
@@ -221,6 +217,7 @@ def keyword_info2(term, limit=20_000):
     keyword_to_jtitle = defaultdict(set)
     keyword_to_authors = defaultdict(set)
     medline_infos = get_medline_infos(pmids)
+    star = False
     for m_info in medline_infos:
         if TERMS not in m_info:
             logger.warning('[Terms] MeSH Terms not found for term: %s ; PMID: %s', term, m_info[PMID])
@@ -237,14 +234,17 @@ def keyword_info2(term, limit=20_000):
             if '*' not in each_term:
                 continue
             else:
-                extracted_term = extract_term(each_term)
-                keyword_to_pmids[extracted_term].add(pmid)
-                pmids_to_keywords[pmid].add(extracted_term)
-                keyword_to_jtitle[extracted_term].add(m_info[J_TITLE])
 
-                for each_author in m_info[AUTHOR_NAME][0:2]:
-                    keyword_to_authors[extracted_term].add(each_author)
-                    pmid_to_authors[pmid].add(each_author)
+                extracted_term = extract_term(each_term)
+                if extracted_term.lower() != term.lower():
+                    keyword_to_pmids[extracted_term].add(pmid)
+                    pmids_to_keywords[pmid].add(extracted_term)
+                    keyword_to_jtitle[extracted_term].add(m_info[J_TITLE])
+                    star = True
+        if star:
+            for each_author in m_info[AUTHOR_NAME][0:2]:
+                keyword_to_authors[extracted_term].add(each_author)
+                pmid_to_authors[pmid].add(each_author)
 
 
     return KeywordInfo2(pmids_to_keywords, keyword_to_pmids, pmid_to_authors, keyword_to_jtitle, keyword_to_authors)
