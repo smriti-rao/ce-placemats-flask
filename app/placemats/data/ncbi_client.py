@@ -180,13 +180,14 @@ def keyword_info_astericks(term, limit=20_000):
     keyword_to_pmids = defaultdict(set)
     pmid_to_articles = {}
     medline_infos = get_medline_infos(pmids)
-    star = False
+
 
     for m_info in medline_infos:
         if TERMS not in m_info:
             logger.warning('[Terms] MeSH Terms not found for term: %s ; PMID: %s', term, m_info[PMID])
             continue
         pmid = m_info[PMID]
+        star = False
         for each_term in m_info[TERMS]:
             if '*' not in each_term:
                 continue
@@ -217,7 +218,7 @@ def keyword_info2(term, limit=20_000):
     keyword_to_jtitle = defaultdict(set)
     keyword_to_authors = defaultdict(set)
     medline_infos = get_medline_infos(pmids)
-    star = False
+
     for m_info in medline_infos:
         if TERMS not in m_info:
             logger.warning('[Terms] MeSH Terms not found for term: %s ; PMID: %s', term, m_info[PMID])
@@ -240,11 +241,11 @@ def keyword_info2(term, limit=20_000):
                     keyword_to_pmids[extracted_term].add(pmid)
                     pmids_to_keywords[pmid].add(extracted_term)
                     keyword_to_jtitle[extracted_term].add(m_info[J_TITLE])
-                    star = True
-        if star:
-            for each_author in m_info[AUTHOR_NAME][0:2]:
-                keyword_to_authors[extracted_term].add(each_author)
-                pmid_to_authors[pmid].add(each_author)
+
+
+                    for each_author in m_info[AUTHOR_NAME][0:2]:
+                        keyword_to_authors[extracted_term].add(each_author)
+                        pmid_to_authors[pmid].add(each_author)
 
 
     return KeywordInfo2(pmids_to_keywords, keyword_to_pmids, pmid_to_authors, keyword_to_jtitle, keyword_to_authors)
